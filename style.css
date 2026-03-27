@@ -475,3 +475,110 @@ td {
   font-size: 1.2rem;
   color: #2c3e50;
 }
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #1e90ff, #00b894);
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+.main-header {
+  background: var(--primary-gradient);
+  padding: 20px 15px;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  box-shadow: var(--shadow-soft);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Efek cahaya hiasan di background */
+.main-header::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  filter: blur(40px);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.logo-wrapper {
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.logo-wrapper:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.logo-header {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.header-text {
+  text-align: left;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 1.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.header-text p {
+  margin: 2px 0;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+#jam {
+  display: inline-block;
+  margin-top: 5px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+
+
+#jam {
+  color: #ffffff; /* Warna putih agar kontras dengan gradient biru/hijau */
+  font-weight: bold;
+  font-size: 14px;
+  display: block; /* Memastikan elemen punya ruang */
+  margin-top: 5px;
+}

@@ -43,6 +43,11 @@ el('btnTambah').onclick = () => {
   const modalSatuan = +el('modal').value;
   const jumlahMasuk = +el('qty').value;
   const totalModal = modalSatuan * jumlahMasuk;
+// Tambahkan validasi ini sebelum save()
+if (+el('harga').value < +el('modal').value) {
+  alert("Peringatan: Harga jual lebih rendah dari modal! Anda akan rugi.");
+  // Tetap lanjut atau return; tergantung keinginan Anda
+}
 
   const item = {
     kode: el('kode').value,
@@ -123,16 +128,38 @@ function editData(i){
 }
 
 // JUAL
-function jual(i){
+function jual(i) {
   let d = data[i];
-  if(d.masuk - d.keluar <= 0){
-    alert("Stok habis!");
+  let stokTersedia = d.masuk - d.keluar;
+
+  // Jika stok sudah 0 dari awal
+  if (stokTersedia <= 0) {
+    alert("Stok sudah habis!");
     return;
   }
-  d.keluar++;
-  kas += d.harga;
+
+  // Minta input jumlah yang dijual
+  let inputJual = prompt(`Masukkan jumlah terjual untuk ${d.nama} (Maks: ${stokTersedia}):`, 1);
+  let jumlahJual = parseInt(inputJual);
+
+  // Validasi Input
+  if (isNaN(jumlahJual) || jumlahJual <= 0) {
+    alert("Masukkan jumlah yang valid!");
+    return;
+  }
+
+  if (jumlahJual > stokTersedia) {
+    alert(`Gagal! Stok tidak mencukupi. Sisa stok hanya ${stokTersedia}`);
+    return;
+  }
+
+  // Eksekusi: Update data keluar dan kas
+  d.keluar += jumlahJual;
+  kas += (d.harga * jumlahJual);
+
   save();
   render();
+  alert(`Berhasil menjual ${jumlahJual} ${d.nama}`);
 }
 
 // HAPUS
@@ -160,86 +187,95 @@ function render(){
   const keyword = el('search').value.toLowerCase();
   const table = el('dataTable');
 
-  let totalPenjualan = data.reduce((acc, d) => acc + (d.keluar * d.harga), 0);
-  let totalLaba = data.reduce((acc, d) => acc + (d.keluar * (d.harga - d.modal)), 0);
+  // Reset hitungan setiap kali render
+  let totalPenjualanSekarang = 0;
+  let totalModalBarangInput = 0;
 
   table.innerHTML = '';
+
+  // Hitung TOTAL MODAL dari semua barang yang pernah diinput (Stok Masuk * Harga Modal)
+  totalModalBarangInput = data.reduce((acc, d) => acc + (d.masuk * d.modal), 0);
 
   data
   .filter(d => d.nama.toLowerCase().includes(keyword))
   .forEach((d, i) => {
-
     const sisa = d.masuk - d.keluar;
-    const total = d.keluar * d.harga;
-    const laba = d.keluar * (d.harga - d.modal);
+    const totalHargaTerjual = d.keluar * d.harga;
 
-    totalPenjualan += total;
-    totalLaba += laba;
+    // Akumulasi total penjualan dari barang yang laku saja
+    totalPenjualanSekarang += totalHargaTerjual;
 
     table.innerHTML += `
-    <tr class="${sisa>0?'status-ada':'status-habis'}">
+    <tr class="${sisa > 0 ? 'status-ada' : 'status-habis'}">
       <td>${i+1}</td>
       <td>${d.nama}</td>
       <td>${rupiah(d.modal)}</td>
-<td>${rupiah(d.harga)}</td>
+      <td>${rupiah(d.harga)}</td>
       <td>${d.masuk}</td>
       <td>${d.keluar}</td>
       <td>${sisa}</td>
-      <td>${rupiah(total)}</td>
-
-      <td class="
-  ${
-    sisa === 0 
-    ? 'status-habis'
-    : sisa <= 5 
-    ? 'status-warning'
-    : 'status-ada'
-  }
-">
-  ${
-    sisa === 0 
-    ? 'Habis'
-    : sisa <= 5 
-    ? 'Hampir Habis'
-    : 'Tersedia'
-  }
-</td>
-<td>
-  ${
-    role==='admin'
-    ? `<button onclick="editData(${i})">Edit</button>
-       <button onclick="hapus(${i})">Hapus</button>`
-    : role==='kasir'
-    ? `<button onclick="jual(${i})">Jual</button>`
-    : `<span style="color:gray">View Only</span>`
-  }
-</td>
+      <td>${rupiah(totalHargaTerjual)}</td>
+      <td class="${sisa === 0 ? 'status-habis' : sisa <= 5 ? 'status-warning' : 'status-ada'}">
+        ${sisa === 0 ? 'Habis' : sisa <= 5 ? 'Hampir Habis' : 'Tersedia'}
+      </td>
+      <td>
+        ${role==='admin'
+          ? `<button onclick="editData(${i})">Edit</button> <button onclick="hapus(${i})">Hapus</button>`
+          : role==='kasir'
+          ? `<button onclick="jual(${i})">Edit Jual</button>`
+          : `<span style="color:gray">View Only</span>`
+        }
+      </td>
     </tr>`;
   });
 
-  el('totalPenjualan').innerText = rupiah(totalPenjualan);
-  el('totalLaba').innerText = rupiah(totalLaba);
+  // LOGIKA LABA: Total Uang Masuk dari Jual - Total Uang Keluar untuk Stok
+  // Atau jika ingin Laba Margin: (Harga Jual - Harga Modal) * Qty Terjual
+  let labaMargin = data.reduce((acc, d) => acc + (d.keluar * (d.harga - d.modal)), 0);
+
+  el('totalPenjualan').innerText = rupiah(totalPenjualanSekarang);
+  el('totalLaba').innerText = rupiah(labaMargin);
   el('kas').innerText = rupiah(kas);
 
   el('formBarang').style.display = role==='admin'?'block':'none';
   el('kasSection').style.display = role==='kasir' ? 'block' : 'none';
 }
 
-function updateJam(){
+
+
+
+function updateJam() {
   const now = new Date();
 
-  const jam = String(now.getHours()).padStart(2,'0');
-  const menit = String(now.getMinutes()).padStart(2,'0');
-  const detik = String(now.getSeconds()).padStart(2,'0');
+  // Daftar hari Indonesia
+  const hariArr = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+  const hari = hariArr[now.getDay()];
 
-  document.getElementById('jam').innerText = `${jam}:${menit}:${detik}`;
+  // Format Tanggal (DD.MM.YYYY)
+  const tgl = String(now.getDate()).padStart(2, '0');
+  const bln = String(now.getMonth() + 1).padStart(2, '0');
+  const thn = now.getFullYear();
+
+  // Format Waktu (HH:mm:ss)
+  const jam = String(now.getHours()).padStart(2, '0');
+  const mnt = String(now.getMinutes()).padStart(2, '0');
+  const dtk = String(now.getSeconds()).padStart(2, '0');
+
+  const elemenJam = document.getElementById('jam');
+  
+  // Validasi: Cek apakah elemen ada sebelum diisi
+  if (elemenJam) {
+    elemenJam.innerText = `${hari} ${tgl}.${bln}.${thn} ${jam}:${mnt}:${dtk} WIB`;
+  }
 }
 
-// update tiap 1 detik
+// Jalankan interval setiap 1 detik
 setInterval(updateJam, 1000);
 
-// jalankan pertama kali
+// Panggil langsung saat refresh agar tidak menunggu 1 detik pertama
 updateJam();
+
+
 
 // SEARCH
 el('search').oninput = render;
