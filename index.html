@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<!-- Primary Meta -->
+
+<meta name="title" content="ASA MANDIRI - Warung Grosir Lengkap & Murah">
+<meta name="description" content="ASA MANDIRI adalah warung grosir terlengkap dengan harga terjangkau. Menyediakan berbagai kebutuhan harian dengan kualitas terbaik, pelayanan cepat, dan sistem penjualan modern.">
+
+<!-- Open Graph (WA / Facebook) -->
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://web189.github.io/asa-mandiri/">
+<meta property="og:title" content="ASA MANDIRI - Grosir Lengkap, Harga Bersahabat">
+<meta property="og:description" content="Belanja lebih hemat di ASA MANDIRI! Warung grosir lengkap dengan harga murah, stok terjamin, dan pelayanan cepat untuk kebutuhan sehari-hari Anda.">
+<meta property="og:image" content="https://web189.github.io/asa-mandiri/preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter -->
+
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:title" content="ASA MANDIRI - Warung Grosir Modern & Terpercaya">
+<meta property="twitter:description" content="Tempat belanja grosir lengkap, murah, dan terpercaya. ASA MANDIRI hadir dengan sistem modern untuk kemudahan transaksi Anda.">
+<meta property="twitter:image" content="https://web189.github.io/asa-mandiri/preview.jpg">
+
+  <meta charset="UTF-8">
+  <title>ASA MANDIRI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<div class="container">
+<body>
+
+<header class="main-header">
+  <div class="header-content">
+    
+    <div class="logo-wrapper">
+      <img src="favicon.png" alt="ASA MANDIRI" class="logo-header">
+    </div>
+
+    <div class="header-text">
+      <h1>ASA MANDIRI</h1>
+      <p>Grosir Lengkap • Harga Bersahabat</p>
+	   <span id="jam"></span>
+    </div>
+
+  </div>
+ 
+</header>
+
+<section class="top-bar">
+<select id="role">
+  <option value="tamu">Tamu</option>
+  <option value="admin">Admin</option>
+  <option value="kasir">Kasir</option>
+</select>
+  <input type="text" id="search" placeholder="Cari barang...">
+</section>
+
+<section id="formBarang" class="card">
+  <h3>Input Barang</h3>
+  <div class="grid">
+    <input id="kode" placeholder="Kode">
+    <input id="nama" placeholder="Nama">
+    <input id="modal" type="number" placeholder="Modal">
+    <input id="harga" type="number" placeholder="Harga">
+    <input id="qty" type="number" placeholder="Qty Masuk">
+  </div>
+  <button id="btnTambah">Simpan</button>
+</section>
+
+<section id="kasSection" class="card">
+  <h3>Manajemen Kas</h3>
+  <div class="grid">
+    <input id="kasInput" type="number" placeholder="Jumlah">
+    <select id="tipeKas">
+      <option value="masuk">Kas Masuk (+)</option>
+      <option value="keluar">Kas Keluar (-)</option>
+    </select>
+  </div>
+  <button id="btnKas">Update Kas</button>
+</section>
+
+<section class="card table-section">
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>Modal</th>
+        <th>Harga</th>
+        <th>Qty Awal</th>
+        <th>Terjual</th>
+        <th>Sisa</th>
+        <th>Total</th>
+
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="dataTable"></tbody>
+  </table>
+</section>
+
+<section class="card summary">
+  <p>Total Penjualan: <b id="totalPenjualan"></b></p>
+  <p>Total Laba: <b id="totalLaba"></b></p>
+  <p>Kas: <b id="kas"></b></p>
+</section>
+
+<script src="app.js"></script>
+</body>
+</div>
+</html>

@@ -1,0 +1,411 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f1f3f6;
+}
+
+/* HEADER */
+header {
+  background: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+/* TOP BAR */
+.top-bar {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+/* INPUT */
+input, select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #27ae60;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e8449;
+}
+
+/* TABLE */
+.table-section {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #dfe6e9;
+  position: sticky;
+  top: 0;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* WARNA STATUS */
+.status-ada {
+  background: #d4edda;
+}
+
+.status-habis {
+  background: #f8d7da;
+}
+
+/* SUMMARY */
+.summary {
+  margin: 10px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 10px;
+  font-weight: bold;
+  display: grid;
+  gap: 5px;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  th, td {
+    font-size: 11px;
+    padding: 5px;
+  }
+}
+
+#kasSection {
+  border-left: 5px solid #0984e3;
+}
+
+/* HEADER MODERN */
+.main-header {
+  background: linear-gradient(135deg, #27ae60, #f1c40f);
+  color: white;
+  padding: 15px 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-content i {
+  font-size: 28px;
+  background: rgba(255,255,255,0.2);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.header-content h1 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.header-content p {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* MOBILE */
+@media (max-width:600px){
+  .header-content h1 {
+    font-size: 16px;
+  }
+
+  .header-content p {
+    font-size: 10px;
+  }
+
+  .header-content i {
+    font-size: 22px;
+    padding: 8px;
+  }
+}
+
+.logo-header {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  background: white;
+  padding: 5px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* HEADER MODERN MINIMARKET */
+.main-header {
+  background: linear-gradient(135deg, #16a085, #f39c12);
+  padding: 12px 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+/* FLEX */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* LOGO BULAT */
+.logo-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  animation: floatLogo 3s ease-in-out infinite;
+}
+
+.logo-header {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+/* TEKS */
+.header-text h1 {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.header-text p {
+  font-size: 11px;
+  color: #ecf0f1;
+}
+
+/* ANIMASI FLOAT */
+@keyframes floatLogo {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* HOVER EFFECT */
+.logo-wrapper:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  transition: 0.3s;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .logo-wrapper {
+    width: 42px;
+    height: 42px;
+  }
+
+  .header-text h1 {
+    font-size: 15px;
+  }
+
+  .header-text p {
+    font-size: 10px;
+  }
+}
+
+.main-header::after {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(to right, #f1c40f, transparent);
+  margin-top: 8px;
+}
+
+#jam {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 11px;
+  color: #fff;
+  opacity: 0.9;
+  background: rgba(0,0,0,0.2);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* ===== GLOBAL ===== */
+body {
+  background: #eef2f7;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+}
+
+/* ===== HEADER ===== */
+.main-header {
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.top-bar select,
+.top-bar input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* ===== FORM GRID ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 8px;
+}
+
+.grid input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ===== BUTTON ===== */
+button {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #16a085;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #138d75;
+}
+
+/* ===== TABLE ===== */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  min-width: 700px;
+}
+
+th {
+  background: #16a085;
+  color: white;
+  padding: 8px;
+}
+
+td {
+  padding: 6px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+/* STATUS */
+.status-ada {
+  background: #eafaf1;
+}
+
+.status-habis {
+  background: #fdecea;
+}
+
+/* ===== SUMMARY ===== */
+.summary {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ===== RESPONSIVE HP ===== */
+@media(max-width:600px){
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 11px;
+  }
+
+  th, td {
+    padding: 5px;
+  }
+
+}
+
+.status-warning {
+  background: #fff3cd;
+  color: #856404;
+  font-weight: bold;
+}
