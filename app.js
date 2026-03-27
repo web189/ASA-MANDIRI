@@ -40,27 +40,39 @@ el('role').onchange = () => {
 
 // TAMBAH / EDIT
 el('btnTambah').onclick = () => {
+  const modalSatuan = +el('modal').value;
+  const jumlahMasuk = +el('qty').value;
+  const totalModal = modalSatuan * jumlahMasuk;
+
   const item = {
     kode: el('kode').value,
     nama: el('nama').value,
-    modal: +el('modal').value,
+    modal: modalSatuan,
     harga: +el('harga').value,
-    masuk: +el('qty').value,
+    masuk: jumlahMasuk,
     keluar: 0
   };
 
   if (editIndex >= 0) {
+    // Logika edit: (Opsional) Jika ingin lebih akurat, 
+    // selisih modal harus dihitung. Untuk pemula, cukup update data.
     data[editIndex] = item;
     editIndex = -1;
   } else {
-   kas -= item.modal * item.masuk; // potong kas beli barang
-data.push(item);
+    // VALIDASI: Jangan sampai kas minus saat beli barang stok
+    if (kas < totalModal) {
+      alert("Kas tidak cukup untuk membeli stok barang ini!");
+      return; 
+    }
+    kas -= totalModal; 
+    data.push(item);
   }
 
   save();
   clearForm();
   render();
 };
+
 
 function clearForm(){
   el('kode').value = '';
@@ -148,14 +160,14 @@ function render(){
   const keyword = el('search').value.toLowerCase();
   const table = el('dataTable');
 
-  let totalPenjualan = 0;
-  let totalLaba = 0;
+  let totalPenjualan = data.reduce((acc, d) => acc + (d.keluar * d.harga), 0);
+  let totalLaba = data.reduce((acc, d) => acc + (d.keluar * (d.harga - d.modal)), 0);
 
   table.innerHTML = '';
 
   data
   .filter(d => d.nama.toLowerCase().includes(keyword))
-  .forEach((d,i)=>{
+  .forEach((d, i) => {
 
     const sisa = d.masuk - d.keluar;
     const total = d.keluar * d.harga;
@@ -205,9 +217,9 @@ function render(){
     </tr>`;
   });
 
-el('totalPenjualan').innerText = rupiah(totalPenjualan);
-el('totalLaba').innerText = rupiah(totalLaba);
-el('kas').innerText = rupiah(kas);
+  el('totalPenjualan').innerText = rupiah(totalPenjualan);
+  el('totalLaba').innerText = rupiah(totalLaba);
+  el('kas').innerText = rupiah(kas);
 
   el('formBarang').style.display = role==='admin'?'block':'none';
   el('kasSection').style.display = role==='kasir' ? 'block' : 'none';

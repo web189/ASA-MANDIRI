@@ -409,3 +409,69 @@ td {
   color: #856404;
   font-weight: bold;
 }
+
+/* Styling Footer */
+.main-footer-bottom {
+  background: #2c3e50; /* Warna gelap profesional */
+  color: white;
+  padding: 25px 0;
+  margin-top: 40px;
+  text-align: center;
+  border-top: 4px solid #3498db;
+}
+
+.footer-content p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.social-credit {
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+.ig-link {
+  color: #ffdc80; /* Warna aksen emas/kuning */
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.ig-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  color: #fff;
+}
+
+.ig-link i {
+  margin-right: 5px;
+  font-size: 1.1rem;
+}
+
+/* Mempercantik Card Ringkasan */
+.summary {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 15px;
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+}
+
+.summary p {
+  margin: 0;
+  padding: 10px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-left: 5px solid #3498db;
+}
+
+.summary b {
+  display: block;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
