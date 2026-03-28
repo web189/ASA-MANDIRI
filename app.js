@@ -1,6 +1,7 @@
 const passwordAdmin = "admin123";
 const passwordKasir = "kasir123";
 let data = JSON.parse(localStorage.getItem('data')) || [];
+let histori = JSON.parse(localStorage.getItem('histori')) || [];
 let kas = parseInt(localStorage.getItem('kas')) || 0; // modal awal
 let role = "tamu";
 let editIndex = -1;
@@ -49,14 +50,29 @@ if (+el('harga').value < +el('modal').value) {
   // Tetap lanjut atau return; tergantung keinginan Anda
 }
 
-  const item = {
-    kode: el('kode').value,
-    nama: el('nama').value,
-    modal: modalSatuan,
-    harga: +el('harga').value,
-    masuk: jumlahMasuk,
-    keluar: 0
-  };
+const now = new Date();
+
+// format tanggal & jam
+const tanggal = now.toLocaleDateString("id-ID", {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric'
+});
+
+const jam = now.toLocaleTimeString("id-ID", {
+  hour: '2-digit',
+  minute: '2-digit'
+});
+
+const item = {
+  kode: el('kode').value,
+  nama: el('nama').value,
+  modal: modalSatuan,
+  harga: +el('harga').value,
+  masuk: jumlahMasuk,
+  keluar: 0,
+  waktu: `${tanggal} ${jam}` // 🔥 TAMBAHAN INI
+};
 
   if (editIndex >= 0) {
     // Logika edit: (Opsional) Jika ingin lebih akurat, 
@@ -71,7 +87,9 @@ if (+el('harga').value < +el('modal').value) {
     }
     kas -= totalModal; 
     data.push(item);
+	tambahHistori(`Tambah barang: ${item.nama} (${item.masuk} pcs)`);
   }
+  
 
   save();
   clearForm();
@@ -160,11 +178,13 @@ function jual(i) {
   save();
   render();
   alert(`Berhasil menjual ${jumlahJual} ${d.nama}`);
+  tambahHistori(`Penjualan: ${jumlahJual} ${d.nama}`);
 }
 
 // HAPUS
 function hapus(i){
   if(confirm("Hapus data?")){
+	  tambahHistori(`Hapus barang: ${data[i].nama}`);
     data.splice(i,1);
     save();
     render();
@@ -201,6 +221,7 @@ function render(){
   .forEach((d, i) => {
     const sisa = d.masuk - d.keluar;
     const totalHargaTerjual = d.keluar * d.harga;
+	const labaItem = d.keluar * (d.harga - d.modal);
 
     // Akumulasi total penjualan dari barang yang laku saja
     totalPenjualanSekarang += totalHargaTerjual;
@@ -208,15 +229,25 @@ function render(){
     table.innerHTML += `
     <tr class="${sisa > 0 ? 'status-ada' : 'status-habis'}">
       <td>${i+1}</td>
-      <td>${d.nama}</td>
+      <td>
+  <p style="font-size:11px; color:gray; margin:0;">
+    ${d.waktu || '-'}
+  </p>
+  <p style="margin:0;">
+    ${d.nama}
+  </p>
+</td>
       <td>${rupiah(d.modal)}</td>
       <td>${rupiah(d.harga)}</td>
       <td>${d.masuk}</td>
       <td>${d.keluar}</td>
       <td>${sisa}</td>
       <td>${rupiah(totalHargaTerjual)}</td>
-      <td class="${sisa === 0 ? 'status-habis' : sisa <= 5 ? 'status-warning' : 'status-ada'}">
-        ${sisa === 0 ? 'Habis' : sisa <= 5 ? 'Hampir Habis' : 'Tersedia'}
+	  <td style="color:${labaItem < 0 ? 'red' : 'green'}">
+  ${rupiah(labaItem)}
+</td>
+      <td class="${sisa === 0 ? 'status-habis' : sisa <= 20 ? 'status-warning' : 'status-ada'}">
+        ${sisa === 0 ? 'Habis' : sisa <= 30 ? 'Hampir Habis' : 'Tersedia'}
       </td>
       <td>
         ${role==='admin'
@@ -275,6 +306,37 @@ setInterval(updateJam, 1000);
 // Panggil langsung saat refresh agar tidak menunggu 1 detik pertama
 updateJam();
 
+function saveHistori(){
+  localStorage.setItem('histori', JSON.stringify(histori));
+}
+
+function tambahHistori(aksi){
+  const now = new Date();
+
+  const waktu = now.toLocaleString("id-ID");
+
+  histori.push({
+    aksi: aksi,
+    waktu: waktu
+  });
+
+  saveHistori();
+}
+
+function lihatHistori(){
+  if(histori.length === 0){
+    alert("Belum ada histori transaksi");
+    return;
+  }
+
+  let text = "=== REKAP HISTORI TRANSAKSI ===\n\n";
+
+  histori.slice().reverse().forEach((h, i) => {
+    text += `${i+1}. ${h.aksi}\n${h.waktu}\n\n`;
+  });
+
+  alert(text);
+}
 
 
 // SEARCH
@@ -282,4 +344,3 @@ el('search').oninput = render;
 
 // INIT
 render();
-

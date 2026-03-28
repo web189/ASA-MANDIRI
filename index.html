@@ -54,10 +54,12 @@
 </header>
 
 <section class="top-bar">
+<button onclick="lihatHistori()">📜 Histori</button>
 <select id="role">
   <option value="tamu">Tamu</option>
   <option value="admin">Admin</option>
   <option value="kasir">Kasir</option>
+  
 </select>
   <input type="text" id="search" placeholder="Cari barang...">
 </section>
@@ -92,13 +94,13 @@
       <tr>
         <th>No</th>
         <th>Nama Barang</th>
-        <th>Modal Awal</th>
+        <th>Harga Beli</th>
         <th>Harga Jual</th>
         <th>Qty Barang</th>
         <th>Qty Terjual</th>
         <th>Qty Sisa</th>
         <th>Total Harga</th>
-
+        <th>Laba</th>
         <th>Status</th>
         <th>Aksi</th>
       </tr>
@@ -113,15 +115,27 @@
   <p>Kas: <b id="kas"></b></p>
 </section>
   
-  <footer class="main-footer-bottom">
+<footer class="main-footer-bottom">
   <div class="footer-content">
-    <p>&copy; 2026 ASA MANDIRI - Hak Cipta Website Developer</p>
+    
+    <p class="footer-title">
+      &copy; 2026 <b>ASA MANDIRI</b>
+    </p>
+
+    <p class="footer-sub">
+      Hak Cipta Website Developer
+    </p>
+
     <div class="social-credit">
-      <span>by<i class="fa-solid fa-code" style="color: #e74c3c;"></i> ~-~ </span>
+      <span class="credit-text">
+        by <i class="fa-solid fa-code">v0.01</i>
+      </span>
+
       <a href="https://www.instagram.com/benyoriki/" target="_blank" class="ig-link">
         <i class="fa-brands fa-instagram"></i> @benyoriki
       </a>
     </div>
+
   </div>
 </footer>
 
