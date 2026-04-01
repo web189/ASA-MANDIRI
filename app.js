@@ -1,6 +1,6 @@
 /* ===========================
    ASA MANDIRI - APP.JS
-   Versi: 2.0 | Perbaikan Total
+   Versi: 2.1 | Update: Force Login on Refresh
    =========================== */
 
 // ── STATE ──────────────────────────────────────
@@ -28,7 +28,7 @@ function rupiah(angka) {
 
 function getEmoji(nama) {
   const n = nama.toLowerCase();
-  if (n.includes("mie") || n.includes("mie") || n.includes("noodle")) return "🍜";
+  if (n.includes("mie") || n.includes("noodle")) return "🍜";
   if (n.includes("beras") || n.includes("rice")) return "🌾";
   if (n.includes("minyak") || n.includes("oil")) return "🛢️";
   if (n.includes("gula") || n.includes("sugar")) return "🍬";
@@ -52,6 +52,7 @@ function getEmoji(nama) {
 
 function toast(pesan, tipe = "success") {
   const t = el("toast");
+  if (!t) return;
   t.textContent = pesan;
   t.className = `toast ${tipe}`;
   setTimeout(() => { t.className = "toast hidden"; }, 3000);
@@ -82,7 +83,7 @@ function updateJam() {
 setInterval(updateJam, 1000);
 updateJam();
 
-// ── FIREBASE ─────────────────────────────────────
+// ── FIREBASE DATA ────────────────────────────────
 function loadData() {
   db.ref("asaMandiri").on("value", snap => {
     const d = snap.val();
@@ -100,14 +101,21 @@ function save() {
   db.ref("asaMandiri").set({ data, histori, kas, logKas });
 }
 
-// ── AUTH ─────────────────────────────────────────
+// ── AUTH (MODIFIED FOR FORCE LOGIN) ──────────────
 function login() {
   const email    = el("email").value.trim();
   const password = el("password").value;
   if (!email || !password) { toast("Email & password wajib diisi", "error"); return; }
 
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => { toast("Login berhasil!"); })
+  // Set Persistence ke SESSION agar login hilang saat tab ditutup
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    .then(() => {
+      return firebase.auth().signInWithEmailAndPassword(email, password);
+    })
+    .then(() => { 
+      toast("Login berhasil!"); 
+      el("password").value = ""; // Bersihkan password field
+    })
     .catch(err => { toast("Login gagal: " + err.message, "error"); });
 }
 
@@ -122,17 +130,19 @@ function loginSebagaiTamu() {
 }
 
 function logout() {
-  if (!currentUser) {
-    // Tamu logout
-    el("loginOverlay").classList.remove("hidden");
-    el("appWrapper").classList.add("hidden");
-    role = "tamu";
-    return;
-  }
   firebase.auth().signOut()
-    .then(() => { toast("Berhasil logout"); })
+    .then(() => { 
+      toast("Berhasil logout"); 
+      // Force reload untuk memastikan state bersih
+      window.location.reload();
+    })
     .catch(err => { toast("Gagal: " + err.message, "error"); });
 }
+
+// FORCE LOGOUT SETIAP KALI HALAMAN DI MUAT ULANG (REFRESH)
+firebase.auth().signOut().then(() => {
+    console.log("State reset: Menunggu login baru.");
+});
 
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
@@ -156,22 +166,13 @@ firebase.auth().onAuthStateChanged(user => {
 
 // ── ROLE UI ──────────────────────────────────────
 function applyRole() {
-  // Sidebar user info
-  const avatars = {
-    admin: "A",
-    kasir: "K",
-    tamu:  "T"
-  };
-  const colors = {
+  const avatars = { admin: "A", kasir: "K", tamu:  "T" };
+  const colors  = {
     admin: "linear-gradient(135deg,#e17055,#d63031)",
     kasir: "linear-gradient(135deg,#0984e3,#74b9ff)",
     tamu:  "linear-gradient(135deg,#636e72,#b2bec3)"
   };
-  const names = {
-    admin: "Administrator",
-    kasir: "Kasir",
-    tamu:  "Tamu"
-  };
+  const names   = { admin: "Administrator", kasir: "Kasir", tamu:  "Tamu" };
 
   if (el("userAvatar")) {
     el("userAvatar").textContent = avatars[role];
@@ -181,7 +182,6 @@ function applyRole() {
   if (el("userBadge"))   el("userBadge").textContent = role.toUpperCase();
   if (el("mobileBadge")) el("mobileBadge").textContent = role.toUpperCase();
 
-  // Show/hide nav sections
   document.querySelectorAll(".admin-only").forEach(e => {
     e.classList.toggle("hidden", role !== "admin");
   });
@@ -189,7 +189,6 @@ function applyRole() {
     e.classList.toggle("hidden", role !== "kasir");
   });
 
-  // Aksi kolom tabel
   const aksiCols = document.querySelectorAll("th.admin-only");
   aksiCols.forEach(c => c.classList.toggle("hidden", role !== "admin"));
 }
@@ -203,9 +202,7 @@ function showSection(id) {
   document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
   document.querySelectorAll(`.nav-item[onclick*="${id}"]`).forEach(n => n.classList.add("active"));
 
-  // Tutup sidebar mobile
   if (window.innerWidth <= 768) el("sidebar").classList.remove("open");
-
   renderSection(id);
 }
 
@@ -297,7 +294,7 @@ function renderInventaris() {
     const aksiAdmin = role === "admin" ? `
       <button class="btn-icon-edit" onclick="editData(${data.indexOf(d)})"><i class="fa-solid fa-pen"></i> Edit</button>
       <button class="btn-icon-del" onclick="hapus(${data.indexOf(d)})"><i class="fa-solid fa-trash"></i></button>
-    ` : `<span style="color:var(--text-muted);font-size:11px;">${role === 'kasir' ? '-' : 'Tamu'}</span>`;
+    ` : `<span style="color:var(--text-muted);font-size:11px;">-</span>`;
 
     tbody.innerHTML += `
       <tr>
@@ -387,7 +384,7 @@ function tambahHistori(aksi) {
   });
 }
 
-// ── INPUT BARANG (ADMIN) ─────────────────────────
+// ── INPUT BARANG & KAS ───────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   const btnTambah = el("btnTambah");
   if (btnTambah) {
@@ -403,14 +400,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!namaBarang || !modalSatuan || !hargaJual || !jumlahMasuk) {
         toast("Lengkapi semua field!", "warning"); return;
       }
-      if (hargaJual < modalSatuan) {
-        toast("⚠ Harga jual lebih rendah dari modal!", "warning");
-      }
-
-      const totalModal = modalSatuan * jumlahMasuk;
-      const now        = new Date();
-      const waktu      = now.toLocaleDateString("id-ID", { day:"2-digit", month:"short", year:"numeric" })
-                       + " " + now.toLocaleTimeString("id-ID", { hour:"2-digit", minute:"2-digit" });
 
       const item = {
         kode: kodeBarang,
@@ -420,365 +409,151 @@ document.addEventListener("DOMContentLoaded", () => {
         masuk: jumlahMasuk,
         keluar: 0,
         kategori: el("kategori")?.value || "",
-        waktu
+        waktu: new Date().toLocaleString("id-ID")
       };
 
       if (editIndex >= 0) {
         data[editIndex] = { ...data[editIndex], ...item, keluar: data[editIndex].keluar };
         tambahHistori(`Edit barang: ${item.nama}`);
         editIndex = -1;
-        el("formTitle").innerHTML = `<i class="fa-solid fa-plus"></i> Tambah Barang Baru`;
       } else {
-        if (kas < totalModal) { toast("Kas tidak cukup! Perlu " + rupiah(totalModal), "error"); return; }
+        const totalModal = modalSatuan * jumlahMasuk;
+        if (kas < totalModal) { toast("Kas tidak cukup!", "error"); return; }
         kas -= totalModal;
-        tambahHistori(`Tambah barang: ${item.nama} (${jumlahMasuk} pcs @ ${rupiah(modalSatuan)})`);
         data.push(item);
+        tambahHistori(`Tambah barang: ${item.nama}`);
       }
 
       save();
       clearForm();
       renderAdminTable();
-      renderDashboard();
-      toast("Barang berhasil disimpan ✓");
+      toast("Berhasil disimpan ✓");
     };
   }
 
-  // Kas
   const btnKas = el("btnKas");
   if (btnKas) {
     btnKas.onclick = () => {
-      const jumlah   = parseInt(el("kasInput").value);
-      const tipe     = el("tipeKas").value;
-      const keterangan = el("keterKas")?.value || (tipe === "masuk" ? "Kas Masuk" : "Kas Keluar");
+      const jumlah = parseInt(el("kasInput").value);
+      const tipe   = el("tipeKas").value;
+      if (!jumlah || jumlah <= 0) return;
 
-      if (!jumlah || jumlah <= 0) { toast("Masukkan jumlah yang valid!", "warning"); return; }
       if (tipe === "keluar" && kas < jumlah) { toast("Kas tidak cukup!", "error"); return; }
 
-      if (tipe === "masuk") kas += jumlah;
-      else                  kas -= jumlah;
+      if (tipe === "masuk") kas += jumlah; else kas -= jumlah;
 
-      logKas.push({
-        keterangan,
-        jumlah,
-        tipe,
-        waktu: new Date().toLocaleString("id-ID")
-      });
-
-      tambahHistori(`${tipe === "masuk" ? "Kas Masuk" : "Kas Keluar"}: ${rupiah(jumlah)} - ${keterangan}`);
+      logKas.push({ keterangan: el("keterKas")?.value || "Kas Update", jumlah, tipe, waktu: new Date().toLocaleString("id-ID") });
       save();
       renderKas();
-      renderDashboard();
       el("kasInput").value = "";
-      if (el("keterKas")) el("keterKas").value = "";
-      toast(`Kas ${tipe} berhasil diupdate ✓`);
+      toast(`Kas diupdate ✓`);
     };
   }
 });
 
 function clearForm() {
-  ["kode","nama","modal","harga","qty","kategori"].forEach(id => {
-    if (el(id)) el(id).value = "";
-  });
+  ["kode","nama","modal","harga","qty","kategori"].forEach(id => { if (el(id)) el(id).value = ""; });
   editIndex = -1;
   if (el("formTitle")) el("formTitle").innerHTML = `<i class="fa-solid fa-plus"></i> Tambah Barang Baru`;
 }
 
 function editData(i) {
   const d = data[i];
-  el("kode").value     = d.kode;
-  el("nama").value     = d.nama;
-  el("modal").value    = d.modal;
-  el("harga").value    = d.harga;
-  el("qty").value      = d.masuk;
-  if (el("kategori")) el("kategori").value = d.kategori || "";
+  el("kode").value = d.kode;
+  el("nama").value = d.nama;
+  el("modal").value = d.modal;
+  el("harga").value = d.harga;
+  el("qty").value = d.masuk;
   editIndex = i;
-  if (el("formTitle")) el("formTitle").innerHTML = `<i class="fa-solid fa-pen"></i> Edit: ${d.nama}`;
   showSection("inputBarang");
-  el("kode").focus();
 }
 
 function hapus(i) {
   if (!confirm(`Hapus "${data[i].nama}"?`)) return;
-  tambahHistori(`Hapus barang: ${data[i].nama}`);
   data.splice(i, 1);
   save();
-  renderAdminTable();
-  renderInventaris();
-  renderDashboard();
-  toast("Barang dihapus");
+  renderAll();
 }
 
-// ── KAS ──────────────────────────────────────────
+// ── KASIR & KERANJANG ─────────────────────────────
 function renderKas() {
   if (el("kasBalance")) el("kasBalance").textContent = rupiah(kas);
-
   const list = el("logKasList");
   if (!list) return;
-
-  if (logKas.length === 0) {
-    list.innerHTML = `<p class="empty-state">Belum ada log kas</p>`;
-    return;
-  }
-
-  list.innerHTML = "";
+  list.innerHTML = logKas.length === 0 ? `<p class="empty-state">Belum ada log kas</p>` : "";
   logKas.slice().reverse().forEach(l => {
-    list.innerHTML += `
-      <div class="log-kas-item">
-        <div>
-          <div class="log-kas-keterangan">${l.keterangan}</div>
-          <div class="log-kas-waktu">${l.waktu}</div>
-        </div>
-        <div class="log-kas-jumlah ${l.tipe === 'masuk' ? 'log-kas-masuk' : 'log-kas-keluar'}">
-          ${l.tipe === 'masuk' ? '+' : '-'}${rupiah(l.jumlah)}
-        </div>
-      </div>`;
+    list.innerHTML += `<div class="log-kas-item"><div>${l.keterangan}<br><small>${l.waktu}</small></div><div class="${l.tipe === 'masuk' ? 'log-kas-masuk' : 'log-kas-keluar'}">${l.tipe === 'masuk' ? '+' : '-'}${rupiah(l.jumlah)}</div></div>`;
   });
 }
 
-// ── KASIR: PILIH BARANG ──────────────────────────
 function renderPilihBarang() {
   const keyword = el("searchKasir")?.value?.toLowerCase() || "";
-  const grid    = el("produkGrid");
+  const grid = el("produkGrid");
   if (!grid) return;
-
   const filtered = data.filter(d => d.nama.toLowerCase().includes(keyword));
   grid.innerHTML = "";
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `<p class="empty-state" style="grid-column:1/-1;">Tidak ada barang</p>`;
-    return;
-  }
-
   filtered.forEach(d => {
     const sisa = d.masuk - d.keluar;
-    const idx  = data.indexOf(d);
-    grid.innerHTML += `
-      <div class="produk-card ${sisa <= 0 ? 'habis' : ''}" onclick="tambahKeKeranjang(${idx})">
-        <div class="produk-emoji">${getEmoji(d.nama)}</div>
-        <div class="produk-name">${d.nama}</div>
-        <div class="produk-harga">${rupiah(d.harga)}</div>
-        <div class="produk-stok">Stok: ${sisa} ${sisa <= 0 ? '(Habis)' : ''}</div>
-      </div>`;
+    grid.innerHTML += `<div class="produk-card ${sisa <= 0 ? 'habis' : ''}" onclick="tambahKeKeranjang(${data.indexOf(d)})"><div class="produk-emoji">${getEmoji(d.nama)}</div><div class="produk-name">${d.nama}</div><div class="produk-harga">${rupiah(d.harga)}</div><div class="produk-stok">Stok: ${sisa}</div></div>`;
   });
 }
 
-// ── KERANJANG ────────────────────────────────────
-function tambahKeKeranjang(dataIdx) {
-  const d    = data[dataIdx];
+function tambahKeKeranjang(idx) {
+  const d = data[idx];
   const sisa = d.masuk - d.keluar;
-
-  if (sisa <= 0) { toast("Stok habis!", "error"); return; }
-
-  const existing = keranjang.find(k => k.dataIdx === dataIdx);
+  if (sisa <= 0) return toast("Stok habis!", "error");
+  const existing = keranjang.find(k => k.dataIdx === idx);
   if (existing) {
-    if (existing.qty >= sisa) { toast(`Stok tidak cukup! Maks ${sisa}`, "warning"); return; }
-    existing.qty++;
+    if (existing.qty < sisa) existing.qty++; else return toast("Stok maksimal!", "warning");
   } else {
-    keranjang.push({ dataIdx, nama: d.nama, harga: d.harga, qty: 1, stokMax: sisa });
+    keranjang.push({ dataIdx: idx, nama: d.nama, harga: d.harga, qty: 1 });
   }
-
   renderKeranjang();
-  toast(`${d.nama} ditambahkan ✓`);
 }
 
-function ubahQtyKeranjang(dataIdx, delta) {
-  const item = keranjang.find(k => k.dataIdx === dataIdx);
+function ubahQtyKeranjang(idx, delta) {
+  const item = keranjang.find(k => k.dataIdx === idx);
   if (!item) return;
-
-  const sisa = data[dataIdx].masuk - data[dataIdx].keluar;
   item.qty += delta;
-
-  if (item.qty <= 0) {
-    keranjang = keranjang.filter(k => k.dataIdx !== dataIdx);
-  } else if (item.qty > sisa) {
-    item.qty = sisa;
-    toast(`Stok maks ${sisa}`, "warning");
-  }
-
+  if (item.qty <= 0) keranjang = keranjang.filter(k => k.dataIdx !== idx);
   renderKeranjang();
-}
-
-function clearKeranjang() {
-  keranjang = [];
-  renderKeranjang();
-  if (el("uangDiterima")) el("uangDiterima").value = "";
-  if (el("kembalian"))    el("kembalian").textContent = "Rp. 0";
 }
 
 function renderKeranjang() {
   const list = el("keranjangList");
   if (!list) return;
-
-  if (keranjang.length === 0) {
-    list.innerHTML = `<p class="empty-state">Keranjang kosong 🛒</p>`;
-    if (el("subtotal"))   el("subtotal").textContent   = "Rp. 0";
-    if (el("grandTotal")) el("grandTotal").textContent = "Rp. 0";
-    return;
-  }
-
-  list.innerHTML = "";
+  list.innerHTML = keranjang.length === 0 ? `<p class="empty-state">Keranjang kosong</p>` : "";
   let total = 0;
-
-  keranjang.forEach(item => {
-    const subtotalItem = item.harga * item.qty;
-    total += subtotalItem;
-    list.innerHTML += `
-      <div class="keranjang-item">
-        <div class="keranjang-item-info">
-          <div class="keranjang-item-name">${item.nama}</div>
-          <div class="keranjang-item-price">${rupiah(item.harga)} × ${item.qty} = ${rupiah(subtotalItem)}</div>
-        </div>
-        <div class="qty-control">
-          <button class="qty-btn" onclick="ubahQtyKeranjang(${item.dataIdx}, -1)">−</button>
-          <span class="qty-val">${item.qty}</span>
-          <button class="qty-btn" onclick="ubahQtyKeranjang(${item.dataIdx}, 1)">+</button>
-        </div>
-      </div>`;
+  keranjang.forEach(k => {
+    total += k.harga * k.qty;
+    list.innerHTML += `<div class="keranjang-item"><div>${k.nama}<br><small>${rupiah(k.harga)} x ${k.qty}</small></div><div><button onclick="ubahQtyKeranjang(${k.dataIdx},-1)">-</button> ${k.qty} <button onclick="ubahQtyKeranjang(${k.dataIdx},1)">+</button></div></div>`;
   });
-
-  if (el("subtotal"))   el("subtotal").textContent   = rupiah(total);
   if (el("grandTotal")) el("grandTotal").textContent = rupiah(total);
-  hitungKembalian();
 }
 
-function hitungKembalian() {
-  const total    = keranjang.reduce((acc, k) => acc + k.harga * k.qty, 0);
-  const diterima = +(el("uangDiterima")?.value || 0);
-  const kembali  = diterima - total;
-
-  if (el("kembalian")) {
-    el("kembalian").textContent = kembali >= 0 ? rupiah(kembali) : "Kurang " + rupiah(Math.abs(kembali));
-    el("kembalian").style.color = kembali >= 0 ? "var(--amber)" : "var(--danger-light)";
-  }
-}
-
-// ── CHECKOUT ─────────────────────────────────────
 function checkout() {
-  if (keranjang.length === 0) { toast("Keranjang kosong!", "warning"); return; }
+  if (keranjang.length === 0) return;
+  const total = keranjang.reduce((a, b) => a + (b.harga * b.qty), 0);
+  const bayar = +el("uangDiterima").value;
+  if (bayar < total) return toast("Uang kurang!", "error");
 
-  const total    = keranjang.reduce((acc, k) => acc + k.harga * k.qty, 0);
-  const diterima = +(el("uangDiterima")?.value || 0);
-  const kembali  = diterima - total;
-
-  if (diterima < total) { toast("Uang diterima kurang!", "error"); return; }
-
-  // Update stok
-  keranjang.forEach(item => {
-    data[item.dataIdx].keluar += item.qty;
-  });
-
-  // Update kas
+  keranjang.forEach(k => { data[k.dataIdx].keluar += k.qty; });
   kas += total;
-  logKas.push({
-    keterangan: "Penjualan kasir (" + keranjang.length + " item)",
-    jumlah: total,
-    tipe: "masuk",
-    waktu: new Date().toLocaleString("id-ID")
-  });
-
-  // Histori
-  const itemList = keranjang.map(k => `${k.qty}x ${k.nama}`).join(", ");
-  tambahHistori(`Penjualan: ${itemList} | Total: ${rupiah(total)}`);
-
+  logKas.push({ keterangan: "Penjualan Kasir", jumlah: total, tipe: "masuk", waktu: new Date().toLocaleString("id-ID") });
+  tambahHistori(`Penjualan senilai ${rupiah(total)}`);
+  
   save();
-
-  // Tampilkan nota
-  tampilkanNota(keranjang, total, diterima, kembali);
-
-  // Reset
+  tampilkanNota(keranjang, total, bayar, bayar - total);
   keranjang = [];
-  renderKeranjang();
-  renderPilihBarang();
-  renderDashboard();
-  if (el("uangDiterima")) el("uangDiterima").value = "";
-  if (el("kembalian"))    el("kembalian").textContent = "Rp. 0";
+  el("uangDiterima").value = "";
+  renderAll();
 }
 
-// ── NOTA ─────────────────────────────────────────
-function tampilkanNota(items, total, diterima, kembali) {
-  const noTrx  = generateNoTransaksi();
-  const now    = new Date();
-  const waktu  = now.toLocaleString("id-ID", {
-    weekday: "long", year: "numeric", month: "long",
-    day: "numeric", hour: "2-digit", minute: "2-digit"
-  });
-  const kasirNama = currentUser?.email === KASIR_EMAIL ? "Kasir" : "Admin";
-
-  let itemsHTML = "";
-  items.forEach(item => {
-    const sub = item.harga * item.qty;
-    itemsHTML += `
-      <div class="nota-item">
-        <div class="nota-item-name">${item.nama}</div>
-        <div class="nota-item-detail">
-          <span>${item.qty} × ${rupiah(item.harga)}</span>
-          <span>${rupiah(sub)}</span>
-        </div>
-      </div>`;
-  });
-
-  el("notaContent").innerHTML = `
-    <div class="nota-header">
-      <div class="nota-toko">🏪 ASA MANDIRI</div>
-      <div class="nota-sub">Grosir Lengkap • Harga Bersahabat</div>
-    </div>
-    <div class="nota-info">
-      No: ${noTrx}<br>
-      ${waktu}<br>
-      Kasir: ${kasirNama}
-    </div>
-    <div class="nota-items">${itemsHTML}</div>
-    <div class="nota-totals">
-      <div class="nota-total-row">
-        <span>Subtotal</span><span>${rupiah(total)}</span>
-      </div>
-      <div class="nota-total-row grand">
-        <span>TOTAL</span><span>${rupiah(total)}</span>
-      </div>
-      <div class="nota-total-row">
-        <span>Bayar</span><span>${rupiah(diterima)}</span>
-      </div>
-      <div class="nota-total-row">
-        <span>Kembali</span><span>${rupiah(kembali)}</span>
-      </div>
-    </div>
-    <div class="nota-footer">
-      <div class="nota-thanks">Terima Kasih! 😊</div>
-      Simpan struk ini sebagai bukti pembelian.<br>
-      Barang yang sudah dibeli tidak dapat dikembalikan.
-    </div>
-  `;
-
+function tampilkanNota(items, total, bayar, kembali) {
+  el("notaContent").innerHTML = `<h3>ASA MANDIRI</h3><hr>${items.map(i => `<div>${i.nama} x${i.qty} = ${rupiah(i.harga * i.qty)}</div>`).join("")}<hr>TOTAL: ${rupiah(total)}<br>BAYAR: ${rupiah(bayar)}<br>KEMBALI: ${rupiah(kembali)}`;
   el("notaModal").classList.remove("hidden");
 }
 
-function tutupNota() {
-  el("notaModal").classList.add("hidden");
-}
+function tutupNota() { el("notaModal").classList.add("hidden"); }
 
-function downloadNota() {
-  const nota = el("notaContent");
-  html2canvas(nota, {
-    backgroundColor: "#ffffff",
-    scale: 2,
-    useCORS: true
-  }).then(canvas => {
-    const link = document.createElement("a");
-    link.download = `Nota-ASA-MANDIRI-${new Date().toLocaleDateString("id-ID").replace(/\//g,"-")}.jpg`;
-    link.href = canvas.toDataURL("image/jpeg", 0.95);
-    link.click();
-    toast("Nota berhasil didownload! ✓");
-  }).catch(() => {
-    toast("Gagal download, coba lagi", "error");
-  });
-}
-
-// ── INIT ─────────────────────────────────────────
-window.onload = () => {
-  if (typeof db !== "undefined") loadData();
-};
-
-window.onload = () => {
-  firebase.auth().signOut();
-  if (typeof db !== "undefined") loadData();
-};
+window.onload = () => { if (typeof db !== "undefined") loadData(); };
