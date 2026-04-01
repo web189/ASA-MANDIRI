@@ -777,3 +777,8 @@ function downloadNota() {
 window.onload = () => {
   if (typeof db !== "undefined") loadData();
 };
+
+window.onload = () => {
+  firebase.auth().signOut();
+  if (typeof db !== "undefined") loadData();
+};
