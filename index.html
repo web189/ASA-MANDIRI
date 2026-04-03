@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CV.ASA MANDIRI</title>
+<title>SISTEM MANAJEMEN TOKO</title>
 <meta name="description" content="ASA MANDIRI - Sistem Manajemen Warung Grosir Modern">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,8 +44,8 @@
     <div class="login-hint">
       <small>Admin: admin@asa.com | Kasir: kasir@asa.com</small>
 	  <div> </div>
-	  <small><a href="https://www.instagram.com/benyoriki/" target="_blank" class="ig-link">
-        <i class="fa-brands fa-instagram"></i> @benyoriki
+	  <small><a href="https://www.instagram.com/benyoriki/" target="_blank" class="btn-login">
+        <i class="fa-brands fa-instagram"></i> Web Developer Programmer by @benyoriki
       </a></small>
     </div>
   </div>
@@ -112,8 +112,16 @@
       <button class="btn-logout" onclick="logout()">
         <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
       </button>
+      <span class="dev-credit">
+        <a href="https://www.instagram.com/benyoriki/" target="_blank">
+          <i class="fa-brands fa-instagram"></i> Web Developer Programmer by @benyoriki
+        </a>
+      </span>
     </div>
   </aside>
+
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
   <!-- MOBILE TOPBAR -->
   <div class="mobile-topbar">
@@ -430,12 +438,14 @@ const firebaseConfig = {
   authDomain: "asa-mandiri.firebaseapp.com",
   databaseURL: "https://asa-mandiri-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "asa-mandiri",
-  storageBucket: "asa-mandiri.firebasestorage.app",
-  messagingSenderId: "521228617478",
-  appId: "1:521228617478:web:5c588b876dc56eeed58087"
+  storageBucket: "asa-mandiri.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef"
 };
+
 firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const db   = firebase.database();
+const auth = firebase.auth();
 </script>
 <script src="app.js"></script>
 </body>

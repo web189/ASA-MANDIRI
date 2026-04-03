@@ -532,7 +532,7 @@ html, body {
   border: 1px solid var(--card-border);
   border-radius: var(--radius);
   padding: 0;
-  overflow: visible; /* jangan hidden agar tabel bisa di-scroll horizontal */
+  overflow: hidden;
 }
 
 .card-header {
@@ -563,28 +563,13 @@ html, body {
    =========================== */
 .table-wrapper {
   overflow-x: auto;
-  overflow-y: visible;
   padding: 4px 0;
-  -webkit-overflow-scrolling: touch; /* smooth scroll di iOS */
-  width: 100%;
-}
-
-/* Indikator bisa digeser di HP */
-.table-wrapper::after {
-  content: '';
-  display: block;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 780px; /* pastikan tabel lebih lebar dari layar HP */
-}
-
-/* Penting: card yang membungkus tabel JANGAN overflow:hidden */
-.card.table-card,
-.card:has(.table-wrapper) {
-  overflow: visible;
+  min-width: 600px;
 }
 
 th {
@@ -1366,117 +1351,384 @@ button {
 /* ===========================
    RESPONSIVE MOBILE
    =========================== */
+
+/* --- Sidebar overlay backdrop for mobile --- */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* --- Developer Credit --- */
+.dev-credit {
+  display: block;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 8px 12px 6px;
+  opacity: 0.8;
+}
+
+.dev-credit a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition);
+}
+
+.dev-credit a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
+  /* --- Sidebar slides in over content --- */
   .sidebar {
     transform: translateX(-100%);
     box-shadow: none;
+    width: 270px;
+    z-index: 200;
   }
 
   .sidebar.open {
     transform: translateX(0);
-    box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+    box-shadow: 8px 0 40px rgba(0,0,0,0.6);
   }
 
+  /* --- Mobile topbar visible --- */
   .mobile-topbar {
     display: flex;
+    height: 60px;
+    padding: 0 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
   }
 
+  .hamburger {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--bg-3);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+
+  .mobile-title {
+    font-size: 15px;
+    letter-spacing: 1.5px;
+  }
+
+  /* --- Main content below topbar --- */
   .main-content {
     margin-left: 0;
-    padding: 72px 14px 14px;
-    overflow-x: hidden; /* cegah scroll body horizontal */
+    padding: 76px 12px 80px;
   }
 
-  /* Section jangan clip konten tabel */
-  .section {
-    overflow: visible;
+  /* --- Page headers --- */
+  .page-header {
+    margin-bottom: 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
 
-  /* Card: tidak boleh overflow hidden agar tabel bisa scroll */
-  .card {
-    overflow: visible;
+  .page-header h2 {
+    font-size: 19px;
+    line-height: 1.2;
   }
 
-  /* Table wrapper: scroll horizontal dengan touch */
+  .jam-display {
+    font-size: 10px;
+    padding: 5px 10px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* --- Search bar full width on mobile --- */
+  .search-bar input {
+    width: 100%;
+  }
+
+  .search-bar.small input {
+    width: 140px;
+  }
+
+  /* --- Stats grid 2 columns --- */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 13px;
+    word-break: break-all;
+  }
+
+  /* --- Tables scroll horizontally --- */
   .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    /* scroll indicator hint */
-    position: relative;
+    border-radius: var(--radius-sm);
   }
 
-  /* Hint teks geser */
-  .table-wrapper::before {
-    content: '\2190  geser tabel  \2192';
-    display: block;
-    text-align: center;
-    font-size: 10px;
-    color: var(--text-muted);
-    padding: 4px 0 2px;
-    opacity: 0.65;
-    letter-spacing: 0.5px;
-  }
-
-  /* Tabel ukuran tetap sehingga bisa digeser */
   table {
-    min-width: 700px;
+    min-width: 540px;
+    font-size: 12px;
   }
 
   th {
     font-size: 10px;
     padding: 8px 10px;
-    white-space: nowrap;
   }
 
   td {
-    font-size: 11px;
     padding: 8px 10px;
-    white-space: nowrap;
+    font-size: 12px;
   }
 
-  /* Kolom nama barang boleh wrap */
-  td:nth-child(3) {
-    white-space: normal;
-    min-width: 90px;
+  /* --- Form grid single column --- */
+  .form-grid {
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 12px;
   }
 
+  .form-actions {
+    padding: 0 14px 14px;
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* --- Kasir layout single column --- */
   .kasir-layout {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
+  /* Keranjang di mobile tidak sticky */
   .keranjang-card {
     position: static;
+    max-height: none;
   }
 
+  /* Produk grid 3 columns on mobile */
+  .produk-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 12px;
+    max-height: 55vh;
+  }
+
+  .produk-card {
+    padding: 10px 8px;
+  }
+
+  .produk-emoji {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .produk-name {
+    font-size: 11px;
+  }
+
+  .produk-harga {
+    font-size: 10px;
+  }
+
+  .produk-stok {
+    font-size: 9px;
+  }
+
+  /* Keranjang list max height on mobile */
+  .keranjang-list {
+    max-height: 220px;
+  }
+
+  .keranjang-summary {
+    padding: 12px;
+  }
+
+  .summary-row.total {
+    font-size: 15px;
+  }
+
+  .bayar-section input {
+    font-size: 16px; /* prevents iOS zoom on focus */
+    padding: 12px;
+  }
+
+  .btn-checkout {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  /* --- Kas layout single column --- */
   .kas-layout {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .kas-balance {
+    font-size: 24px;
+    padding: 14px;
   }
 
-  .stat-value {
-    font-size: 14px;
-  }
-
-  .page-header h2 {
-    font-size: 18px;
-  }
-
+  /* --- Nota modal --- */
   .nota-print {
-    width: 300px;
+    width: calc(100vw - 40px);
+    max-width: 320px;
     padding: 20px 16px;
+  }
+
+  .nota-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .nota-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* --- Card header on mobile --- */
+  .card-header {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .card-header h3 {
+    font-size: 13px;
+  }
+
+  /* --- Low stock items wrap well --- */
+  .low-stock-list {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .low-stock-item {
+    padding: 8px 12px;
+    font-size: 12px;
+    width: calc(50% - 4px);
+    min-width: 130px;
+  }
+
+  /* --- Histori items readable --- */
+  .histori-item {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .histori-aksi {
+    font-size: 12px;
+  }
+
+  /* --- Btn logout on mobile --- */
+  .btn-logout {
+    padding: 11px;
+    font-size: 13px;
+  }
+
+  /* --- Toast bottom position higher to avoid nav bar --- */
+  .toast {
+    bottom: 16px;
+    right: 12px;
+    left: 12px;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  /* --- Login card on mobile --- */
+  .login-card {
+    padding: 28px 22px;
+    width: 92%;
+    border-radius: 20px;
+  }
+
+  .login-logo h2 {
+    font-size: 19px;
+  }
+
+  .login-logo-icon {
+    font-size: 44px;
+  }
+
+  .input-group input {
+    font-size: 16px; /* prevents iOS zoom */
+    padding: 13px 12px 13px 40px;
+  }
+
+  .btn-login {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  /* --- Page header search full width --- */
+  .page-header > .search-bar {
+    width: 100%;
+  }
+
+  .page-header > .search-bar input {
+    width: 100%;
   }
 }
 
+/* Extra small phones */
 @media (max-width: 420px) {
   .stats-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .stat-value {
+    font-size: 12px;
   }
 
   .produk-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .main-content {
+    padding: 72px 10px 70px;
+  }
+
+  .low-stock-item {
+    width: 100%;
   }
 }
 
@@ -1497,4 +1749,33 @@ button {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* Mobile: prevent horizontal body scroll */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Smooth scroll on iOS */
+  .produk-grid,
+  .keranjang-list,
+  .log-kas-list,
+  .histori-list,
+  .table-wrapper {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Tap highlight removal for iOS */
+  a, button, .produk-card, .nav-item {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Input focus outline on mobile */
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0,184,148,0.15);
+  }
 }
