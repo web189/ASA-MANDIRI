@@ -35,7 +35,7 @@ html, body {
   color: var(--text);
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
-  overflow-x: hidden;
+  /* Do NOT set overflow-x: hidden here — it breaks table horizontal scroll on mobile */
 }
 
 /* ===========================
@@ -188,6 +188,7 @@ html, body {
 .app-wrapper {
   display: flex;
   min-height: 100vh;
+  overflow-x: visible;
 }
 
 .app-wrapper.hidden {
@@ -424,6 +425,7 @@ html, body {
   min-height: 100vh;
   background: var(--bg);
   padding: 24px;
+  overflow-x: visible;
 }
 
 .section {
@@ -538,6 +540,22 @@ html, body {
   overflow: hidden;
 }
 
+/* Cards that contain tables must allow horizontal scroll */
+.card-table {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+.card-table .card-header {
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--card);
+}
+
+/* Fallback: any card with table-wrapper allows scroll */
+.card .table-wrapper {
+  border-radius: 0;
+}
+
 .card-header {
   padding: 16px 20px;
   border-bottom: 1px solid var(--card-border);
@@ -566,13 +584,24 @@ html, body {
    =========================== */
 .table-wrapper {
   overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
   padding: 4px 0;
+  /* Ensure it doesn't clip on mobile */
+  width: 100%;
+  display: block;
+}
+
+/* Scrollbar hint indicator on mobile */
+.table-wrapper::after {
+  content: '';
+  display: none;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 700px;
 }
 
 th {
@@ -633,6 +662,17 @@ tr:hover td {
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
+}
+
+.badge-satuan {
+  background: rgba(162,155,254,0.15);
+  color: var(--purple);
+  border: 1px solid rgba(162,155,254,0.25);
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .laba-pos { color: var(--primary); font-weight: 600; }
@@ -1521,13 +1561,29 @@ button {
 
   /* --- Tables scroll horizontally --- */
   .table-wrapper {
-    overflow-x: auto;
+    overflow-x: scroll !important;
+    overflow-y: visible;
     -webkit-overflow-scrolling: touch;
-    border-radius: var(--radius-sm);
+    border-radius: 0;
+    display: block;
+    width: 100%;
+  }
+
+  /* Scroll hint label */
+  .table-wrapper::before {
+    content: '⟵ geser kanan/kiri ⟶';
+    display: block;
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-muted);
+    padding: 5px 0 3px;
+    letter-spacing: 0.5px;
+    opacity: 0.7;
   }
 
   table {
-    min-width: 540px;
+    min-width: 700px;
+    width: max-content;
     font-size: 12px;
   }
 
@@ -1772,11 +1828,22 @@ button {
   background: var(--text-muted);
 }
 
-/* Mobile: prevent horizontal body scroll */
+/* Mobile: DO NOT set overflow-x:hidden on html/body — it kills table horizontal scroll.
+   Instead clip only the sidebar. */
 @media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden;
+  html {
     -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    /* NO overflow-x: hidden here */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* card-table must allow horizontal scroll to pass through */
+  .card-table {
+    overflow-x: visible !important;
+    overflow-y: visible !important;
   }
 
   /* Smooth scroll on iOS */
@@ -1786,6 +1853,15 @@ button {
   .histori-list,
   .table-wrapper {
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* CRITICAL: entire scroll chain for table must be overflow visible */
+  .app-wrapper,
+  .main-content,
+  .section,
+  .section.active,
+  .card-table {
+    overflow-x: visible !important;
   }
 
   /* Tap highlight removal for iOS */
@@ -1799,4 +1875,25 @@ button {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(0,184,148,0.15);
   }
+}
+
+.dev-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+
+.dev-link i {
+  font-size: 12px;
+}
+
+.dev-link:hover {
+  color: #e1306c; /* warna IG */
+  background: rgba(225, 48, 108, 0.1);
 }

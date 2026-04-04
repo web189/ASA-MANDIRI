@@ -28,25 +28,82 @@ function rupiah(angka) {
 
 function getEmoji(nama) {
   const n = nama.toLowerCase();
-  if (n.includes("mie") || n.includes("mie") || n.includes("noodle")) return "🍜";
+ // 🍜 Makanan Pokok & Instan
+  if (n.includes("mie") || n.includes("noodle") || n.includes("indomie")) return "🍜";
   if (n.includes("beras") || n.includes("rice")) return "🌾";
-  if (n.includes("minyak") || n.includes("oil")) return "🛢️";
+  if (n.includes("tepung") || n.includes("flour")) return "🌽";
+  if (n.includes("gandum") || n.includes("wheat")) return "🌿";
+  if (n.includes("roti") || n.includes("bread")) return "🍞";
+  if (n.includes("bihun") || n.includes("sohun")) return "🍝";
+
+  // 🧂 Bumbu & Dapur
+  if (n.includes("garam") || n.includes("salt")) return "🧂";
   if (n.includes("gula") || n.includes("sugar")) return "🍬";
+  if (n.includes("penyedap") || n.includes("micin") || n.includes("msg")) return "🧂";
+  if (n.includes("saus") || n.includes("saos") || n.includes("ketchup")) return "🍅";
+  if (n.includes("sambal") || n.includes("chili")) return "🌶️";
+  if (n.includes("kecap") || n.includes("soy")) return "🍶";
+  if (n.includes("kaldu") || n.includes("broth")) return "🍲";
+
+  // 🛢️ Minyak & Cairan
+  if (n.includes("minyak") || n.includes("oil")) return "🛢️";
+  if (n.includes("air") || n.includes("water") || n.includes("aqua")) return "💧";
+  if (n.includes("sirup")) return "🍯";
+
+  // 🥛 Produk Hewani
   if (n.includes("susu") || n.includes("milk")) return "🥛";
+  if (n.includes("kental manis")) return "🥫";
   if (n.includes("telur") || n.includes("egg")) return "🥚";
+  if (n.includes("keju") || n.includes("cheese")) return "🧀";
+  if (n.includes("mentega") || n.includes("butter") || n.includes("margarin")) return "🧈";
+
+  // ☕ Minuman
   if (n.includes("kopi") || n.includes("coffee")) return "☕";
   if (n.includes("teh") || n.includes("tea")) return "🍵";
-  if (n.includes("air") || n.includes("water") || n.includes("aqua")) return "💧";
+  if (n.includes("jus") || n.includes("minuman") || n.includes("drink")) return "🥤";
+  if (n.includes("soda") || n.includes("cola")) return "🥤";
+  if (n.includes("energi") || n.includes("energy")) return "⚡";
+
+  // 🍫 Snack & Cemilan
   if (n.includes("snack") || n.includes("keripik") || n.includes("chips")) return "🍟";
+  if (n.includes("biskuit") || n.includes("biscuit")) return "🍪";
+  if (n.includes("wafer")) return "🧇";
+  if (n.includes("cokelat") || n.includes("choco")) return "🍫";
+  if (n.includes("permen") || n.includes("candy")) return "🍭";
+  if (n.includes("kacang") || n.includes("nuts")) return "🥜";
+  if (n.includes("mie lidi") || n.includes("snack pedas")) return "🌶️";
+
+  // 🥫 Makanan Kaleng & Siap Saji
+  if (n.includes("sarden") || n.includes("sardine")) return "🐟";
+  if (n.includes("kornet") || n.includes("corned")) return "🥫";
+  if (n.includes("abon")) return "🥩";
+  if (n.includes("mie instan cup")) return "🍜";
+
+  // 🧼 Kebersihan
   if (n.includes("sabun") || n.includes("soap")) return "🧼";
   if (n.includes("deterjen") || n.includes("rinso")) return "🧺";
+  if (n.includes("pewangi") || n.includes("softener")) return "🌸";
+  if (n.includes("pembersih") || n.includes("cleaner")) return "🧽";
+  if (n.includes("karbol")) return "🧴";
+  if (n.includes("pemutih") || n.includes("bleach")) return "⚪";
+
+  // 🧴 Perawatan Diri
   if (n.includes("sampo") || n.includes("shampoo")) return "🧴";
+  if (n.includes("pasta gigi") || n.includes("odol")) return "🪥";
+  if (n.includes("sabun mandi")) return "🛁";
+  if (n.includes("parfum") || n.includes("deodorant")) return "💐";
+  if (n.includes("tisu") || n.includes("tissue")) return "🧻";
+  if (n.includes("pembalut")) return "🩸";
+
+  // 🚬 Rokok & Lainnya
   if (n.includes("rokok") || n.includes("cigarette")) return "🚬";
-  if (n.includes("roti") || n.includes("bread")) return "🍞";
-  if (n.includes("saus") || n.includes("ketchup") || n.includes("saos")) return "🍅";
-  if (n.includes("minuman") || n.includes("sirup") || n.includes("jus")) return "🥤";
-  if (n.includes("cokelat") || n.includes("choco")) return "🍫";
-  if (n.includes("wafer") || n.includes("biscuit") || n.includes("biskuit")) return "🍪";
+
+  // 🏪 Lain-lain Grosir
+  if (n.includes("gas") || n.includes("elpiji")) return "🔥";
+  if (n.includes("lilin") || n.includes("candle")) return "🕯️";
+  if (n.includes("plastik") || n.includes("kresek")) return "🛍️";
+  if (n.includes("es batu")) return "🧊";
+  if (n.includes("air galon")) return "🚰";
   return "📦";
 }
 
@@ -288,7 +345,7 @@ function renderInventaris() {
   tbody.innerHTML = "";
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="12" class="empty-state">Tidak ada barang</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13" class="empty-state">Tidak ada barang</td></tr>`;
     return;
   }
 
@@ -306,6 +363,8 @@ function renderInventaris() {
       <button class="btn-icon-del" onclick="hapus(${data.indexOf(d)})"><i class="fa-solid fa-trash"></i></button>
     ` : `<span style="color:var(--text-muted);font-size:11px;">${role === 'kasir' ? '-' : 'Tamu'}</span>`;
 
+    const satuanLabel = d.satuan ? d.satuan.split(" ")[0] : "Pcs";
+
     tbody.innerHTML += `
       <tr>
         <td>${i + 1}</td>
@@ -314,6 +373,7 @@ function renderInventaris() {
           <div style="font-weight:600;">${d.nama}</div>
           <div style="font-size:10px;color:var(--text-muted);">${d.waktu || ""}</div>
         </td>
+        <td><span class="badge-satuan">${satuanLabel}</span></td>
         <td>${rupiah(d.modal)}</td>
         <td>${rupiah(d.harga)}</td>
         <td>${d.masuk}</td>
@@ -334,17 +394,19 @@ function renderAdminTable() {
   tbody.innerHTML = "";
 
   if (data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Belum ada barang</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Belum ada barang</td></tr>`;
     return;
   }
 
   data.forEach((d, i) => {
     const sisa = d.masuk - d.keluar;
+    const satuanLabel = d.satuan ? d.satuan.split(" ")[0] : "Pcs";
     tbody.innerHTML += `
       <tr>
         <td>${i + 1}</td>
         <td><code style="font-size:11px">${d.kode || "-"}</code></td>
         <td>${d.nama}</td>
+        <td><span class="badge-satuan">${satuanLabel}</span></td>
         <td>${rupiah(d.modal)}</td>
         <td>${rupiah(d.harga)}</td>
         <td><b>${sisa}</b></td>
@@ -427,6 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
         masuk: jumlahMasuk,
         keluar: 0,
         kategori: el("kategori")?.value || "",
+        satuan: el("satuan")?.value || "Pcs",
         waktu
       };
 
@@ -486,6 +549,7 @@ function clearForm() {
   ["kode","nama","modal","harga","qty","kategori"].forEach(id => {
     if (el(id)) el(id).value = "";
   });
+  if (el("satuan")) el("satuan").value = "";
   editIndex = -1;
   if (el("formTitle")) el("formTitle").innerHTML = `<i class="fa-solid fa-plus"></i> Tambah Barang Baru`;
 }
@@ -498,6 +562,7 @@ function editData(i) {
   el("harga").value    = d.harga;
   el("qty").value      = d.masuk;
   if (el("kategori")) el("kategori").value = d.kategori || "";
+  if (el("satuan"))   el("satuan").value   = d.satuan   || "";
   editIndex = i;
   if (el("formTitle")) el("formTitle").innerHTML = `<i class="fa-solid fa-pen"></i> Edit: ${d.nama}`;
   showSection("inputBarang");
@@ -726,13 +791,16 @@ function tampilkanNota(items, total, diterima, kembali) {
 
   el("notaContent").innerHTML = `
     <div class="nota-header">
-      <div class="nota-toko">🏪 ASA MANDIRI</div>
+      <div class="nota-toko">🏪 CV.ASA MANDIRI</div>
       <div class="nota-sub">Grosir Lengkap • Harga Bersahabat</div>
+	  <div class="nota-sub">Jl.raya jampang Kp.binong</div>
     </div>
     <div class="nota-info">
       No: ${noTrx}<br>
       ${waktu}<br>
       Kasir: ${kasirNama}
+	  <div class="nota-sub">Tlpn: 0899-6875-232</div>
+	  
     </div>
     <div class="nota-items">${itemsHTML}</div>
     <div class="nota-totals">
@@ -751,6 +819,8 @@ function tampilkanNota(items, total, diterima, kembali) {
     </div>
     <div class="nota-footer">
       <div class="nota-thanks">Terima Kasih! 😊</div>
+	  <div class="nota-sub">BCA 8801047246 </div>
+	  <div class="nota-sub">ALI MUDHOFIR </div>
       Simpan struk ini sebagai bukti pembelian.<br>
       Barang yang sudah dibeli tidak dapat dikembalikan.
     </div>

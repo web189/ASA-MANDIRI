@@ -65,10 +65,12 @@
     </div>
     <div class="login-hint">
       <small>Admin: admin@asa.com | Kasir: kasir@asa.com</small>
-	  <div> </div>
-	  <small><a href="https://www.instagram.com/benyoriki/" target="_blank" class="btn-login">
-        <i class="fa-brands fa-instagram"></i> Web Developer Programmer by @benyoriki
-      </a></small>
+
+<small>
+  <a href="https://www.instagram.com/benyoriki/" target="_blank" class="dev-link">
+    <i class="fa-brands fa-instagram"></i> Developer: @benyoriki
+  </a>
+</small>
     </div>
   </div>
 </div>
@@ -82,10 +84,8 @@
       <div class="brand-icon">🏪</div>
       <div class="brand-text">
         <span class="brand-name">ASA MANDIRI</span>
-        <span class="brand-sub">Grosir Modern</span>
-		<small><a href="https://www.instagram.com/benyoriki/" target="_blank" class="ig-link">
-        <i class=" "></i> @benyoriki
-      </a></small>
+        <span class="brand-sub">Grosir Modern Website Sistem</span>
+
       </div>
     </div>
 
@@ -214,7 +214,7 @@
           <input type="text" id="search" placeholder="Cari barang..." oninput="renderInventaris()">
         </div>
       </div>
-      <div class="card">
+      <div class="card card-table">
         <div class="table-wrapper">
           <table>
             <thead>
@@ -222,6 +222,7 @@
                 <th>No</th>
                 <th>Kode</th>
                 <th>Nama Barang</th>
+                <th>Satuan</th>
                 <th>Harga Beli</th>
                 <th>Harga Jual</th>
                 <th>Masuk</th>
@@ -273,6 +274,19 @@
             <label>Kategori</label>
             <input id="kategori" placeholder="Minuman, Makanan, dll">
           </div>
+          <div class="form-group">
+            <label>Satuan Barang</label>
+            <select id="satuan">
+              <option value="">-- Pilih Satuan --</option>
+              <option value="Karton/Dus (isi 10-48 pcs)">📦 Karton/Dus (isi 10-48 pcs)</option>
+              <option value="Bal (isi 10-20 pak)">🎁 Bal (isi 10-20 pak)</option>
+              <option value="Pak/Pack">📫 Pak/Pack</option>
+              <option value="Lusin (12 pcs)">🔢 Lusin (12 pcs)</option>
+              <option value="Kodi (20 pcs)">🔢 Kodi (20 pcs)</option>
+              <option value="Rim (500 lembar)">📄 Rim (500 lembar)</option>
+              <option value="Pcs">🔹 Pcs (Pieces/Buah)</option>
+            </select>
+          </div>
         </div>
         <div class="form-actions">
           <button class="btn-primary" id="btnTambah">
@@ -285,7 +299,7 @@
       </div>
 
       <!-- Daftar Barang Admin -->
-      <div class="card mt-16">
+      <div class="card mt-16 card-table">
         <div class="card-header">
           <h3><i class="fa-solid fa-list"></i> Daftar Barang</h3>
         </div>
@@ -296,6 +310,7 @@
                 <th>No</th>
                 <th>Kode</th>
                 <th>Nama</th>
+                <th>Satuan</th>
                 <th>Modal</th>
                 <th>Harga Jual</th>
                 <th>Stok</th>
@@ -451,7 +466,7 @@
 <div id="toast" class="toast hidden"></div>
 
 <!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script>
@@ -460,11 +475,8 @@ const firebaseConfig = {
   authDomain: "asa-mandiri.firebaseapp.com",
   databaseURL: "https://asa-mandiri-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "asa-mandiri",
-  storageBucket: "asa-mandiri.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef"
+  storageBucket: "asa-mandiri.appspot.com"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db   = firebase.database();
 const auth = firebase.auth();
