@@ -455,8 +455,11 @@
       <!-- Nota diisi JS -->
     </div>
     <div class="nota-actions">
+      <button class="btn-print" onclick="printNota()">
+        <i class="fa-solid fa-print"></i> Print Struk
+      </button>
       <button class="btn-download" onclick="downloadNota()">
-        <i class="fa-solid fa-download"></i> Download Nota (JPG)
+        <i class="fa-solid fa-download"></i> Download (JPG)
       </button>
       <button class="btn-secondary" onclick="tutupNota()">
         <i class="fa-solid fa-xmark"></i> Tutup
@@ -469,20 +472,22 @@
 <div id="toast" class="toast hidden"></div>
 
 <!-- FIREBASE -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyDQfd3U6ItGm29OM5cPgYfxxFG3JTEG8IY",
   authDomain: "asa-mandiri.firebaseapp.com",
-  databaseURL: "https://asa-mandiri-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://asa-mandiri-default-rtdb.firebaseio.com",
   projectId: "asa-mandiri",
-  storageBucket: "asa-mandiri.appspot.com"
+  storageBucket: "asa-mandiri.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef1234567890"
 };
+
 firebase.initializeApp(firebaseConfig);
-const db   = firebase.database();
-const auth = firebase.auth();
+const db = firebase.database();
 </script>
 <script src="app.js"></script>
 </body>

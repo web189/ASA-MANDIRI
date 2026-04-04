@@ -1237,109 +1237,139 @@ button {
   overflow-y: auto;
 }
 
-/* Nota yang akan di-screenshot */
+/* =========================================
+   NOTA PRINT - Optimized for RPP02N / EP58M / MP58II
+   Paper width: 58mm thermal roll
+   Printable area: ~48mm = ~180px at 96dpi
+   ========================================= */
 .nota-print {
   background: #ffffff;
-  color: #111;
-  width: 340px;
-  padding: 28px 24px;
-  border-radius: 12px;
-  font-family: 'Space Mono', monospace;
+  color: #000000;
+  /* 58mm kertas thermal = ~220px lebar display, cetak pas di 48mm area */
+  width: 220px;
+  padding: 10px 8px;
+  border-radius: 6px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  line-height: 1.5;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  word-break: break-word;
 }
 
 .nota-header {
   text-align: center;
-  border-bottom: 2px dashed #ccc;
-  padding-bottom: 14px;
-  margin-bottom: 14px;
+  border-bottom: 1px dashed #000;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .nota-toko {
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 700;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  color: #111;
-  letter-spacing: 1px;
+  font-family: 'Courier New', Courier, monospace;
+  color: #000000;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .nota-sub {
   font-size: 10px;
-  color: #666;
+  color: #000000;
   margin-top: 2px;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .nota-info {
   font-size: 10px;
-  color: #555;
-  margin-bottom: 12px;
+  color: #000000;
+  margin-bottom: 8px;
   line-height: 1.6;
+  font-family: 'Courier New', Courier, monospace;
+  border-bottom: 1px dashed #000;
+  padding-bottom: 6px;
 }
 
 .nota-items {
-  border-top: 1px dashed #ccc;
-  border-bottom: 1px dashed #ccc;
-  padding: 10px 0;
-  margin-bottom: 10px;
+  border-top: 1px dashed #000;
+  border-bottom: 1px dashed #000;
+  padding: 6px 0;
+  margin-bottom: 6px;
 }
 
 .nota-item {
-  font-size: 11px;
-  margin-bottom: 6px;
-  color: #111;
+  font-size: 10px;
+  margin-bottom: 5px;
+  color: #000000;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-.nota-item-name { font-weight: 600; }
+.nota-item-name {
+  font-weight: 700;
+  font-size: 10px;
+  color: #000000;
+  word-break: break-word;
+}
+
 .nota-item-detail {
   display: flex;
   justify-content: space-between;
-  color: #444;
+  color: #000000;
+  font-size: 10px;
 }
 
-.nota-totals { font-size: 11px; }
+.nota-totals {
+  font-size: 10px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
 .nota-total-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 4px;
-  color: #333;
+  margin-bottom: 3px;
+  color: #000000;
+  font-size: 10px;
 }
 
 .nota-total-row.grand {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  color: #111;
-  border-top: 1px solid #ccc;
-  padding-top: 6px;
-  margin-top: 6px;
+  color: #000000;
+  border-top: 1px solid #000;
+  padding-top: 4px;
+  margin-top: 4px;
 }
 
 .nota-footer {
   text-align: center;
-  margin-top: 14px;
+  margin-top: 8px;
   font-size: 10px;
-  color: #888;
-  border-top: 2px dashed #ccc;
-  padding-top: 12px;
+  color: #000000;
+  border-top: 1px dashed #000;
+  padding-top: 8px;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.6;
 }
 
 .nota-thanks {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
   font-weight: 700;
-  color: #111;
+  color: #000000;
   margin-bottom: 4px;
 }
 
 .nota-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn-download {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 12px 20px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
@@ -1348,6 +1378,91 @@ button {
   align-items: center;
   gap: 7px;
   font-family: inherit;
+}
+
+.btn-print {
+  background: linear-gradient(135deg, #2d3436, #636e72);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.btn-print:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+/* =========================================
+   PRINT MEDIA QUERY - RPP02N / EP58M / MP58II
+   58mm paper = 48mm printable
+   ========================================= */
+@media print {
+  /* Sembunyikan semua kecuali struk */
+  body * { visibility: hidden !important; }
+
+  /* Tampilkan hanya konten struk */
+  #notaContent,
+  #notaContent * {
+    visibility: visible !important;
+  }
+
+  #notaContent {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 4px !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    /* Ukuran pas untuk 58mm thermal printer */
+    width: 48mm !important;
+    font-size: 8pt !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  /* Semua teks struk jadi hitam pekat */
+  #notaContent .nota-toko,
+  #notaContent .nota-sub,
+  #notaContent .nota-info,
+  #notaContent .nota-item,
+  #notaContent .nota-item-name,
+  #notaContent .nota-item-detail,
+  #notaContent .nota-total-row,
+  #notaContent .nota-footer,
+  #notaContent .nota-thanks {
+    color: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Header toko lebih besar */
+  #notaContent .nota-toko { font-size: 10pt !important; font-weight: 700 !important; }
+  #notaContent .nota-thanks { font-size: 9pt !important; font-weight: 700 !important; }
+  #notaContent .nota-total-row.grand { font-size: 9pt !important; font-weight: 700 !important; }
+
+  /* Garis pembatas */
+  #notaContent .nota-header { border-bottom: 1px dashed #000 !important; }
+  #notaContent .nota-info { border-bottom: 1px dashed #000 !important; }
+  #notaContent .nota-items { border-top: 1px dashed #000 !important; border-bottom: 1px dashed #000 !important; }
+  #notaContent .nota-footer { border-top: 1px dashed #000 !important; }
+  #notaContent .nota-total-row.grand { border-top: 1px solid #000 !important; }
+
+  /* Setting halaman untuk thermal 58mm */
+  @page {
+    size: 58mm auto;
+    margin: 2mm 1mm;
+  }
 }
 
 /* ===========================
@@ -1691,19 +1806,19 @@ button {
 
   /* --- Nota modal --- */
   .nota-print {
-    width: calc(100vw - 40px);
-    max-width: 320px;
-    padding: 20px 16px;
+    width: 220px;
+    padding: 10px 8px;
   }
 
   .nota-actions {
     flex-direction: column;
     width: 100%;
     gap: 8px;
+    align-items: center;
   }
 
   .nota-actions button {
-    width: 100%;
+    width: 200px;
     justify-content: center;
   }
 

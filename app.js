@@ -833,6 +833,10 @@ function tutupNota() {
   el("notaModal").classList.add("hidden");
 }
 
+function printNota() {
+  window.print();
+}
+
 function downloadNota() {
   const nota = el("notaContent");
   html2canvas(nota, {
