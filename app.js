@@ -854,3 +854,21 @@ function downloadNota() {
 window.onload = () => {
   if (typeof db !== "undefined") loadData();
 };
+
+function resetDatabase() {
+  if (role !== "admin") {
+    toast("Hanya admin yang bisa reset!", "error");
+    return;
+  }
+
+  if (!confirm("⚠️ RESET TOTAL?\nSemua data akan dihapus permanen!")) return;
+
+  db.ref("asaMandiri").set({
+    data: [],
+    histori: [],
+    kas: 0,
+    logKas: []
+  })
+  .then(() => toast("Berhasil reset ke pengaturan awal!"))
+  .catch(err => toast("Error: " + err.message, "error"));
+}
