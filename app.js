@@ -770,11 +770,20 @@ function checkout() {
 function tampilkanNota(items, total, diterima, kembali) {
   const noTrx  = generateNoTransaksi();
   const now    = new Date();
-  const waktu  = now.toLocaleString("id-ID", {
-    weekday: "long", year: "numeric", month: "long",
-    day: "numeric", hour: "2-digit", minute: "2-digit"
-  });
+
+  // Format tanggal & jam manual — lebih ringkas untuk struk
+  const hari  = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][now.getDay()];
+  const tgl   = String(now.getDate()).padStart(2,"0");
+  const bln   = String(now.getMonth()+1).padStart(2,"0");
+  const thn   = now.getFullYear();
+  const jam   = String(now.getHours()).padStart(2,"0");
+  const mnt   = String(now.getMinutes()).padStart(2,"0");
+  const waktu = `${hari}, ${tgl}/${bln}/${thn}  ${jam}:${mnt}`;
+
   const kasirNama = currentUser?.email === KASIR_EMAIL ? "Kasir" : "Admin";
+
+  // Garis separator 32 karakter (pas 48mm Courier New 9pt)
+  const LINE = "--------------------------------";
 
   let itemsHTML = "";
   items.forEach(item => {
@@ -783,7 +792,7 @@ function tampilkanNota(items, total, diterima, kembali) {
       <div class="nota-item">
         <div class="nota-item-name">${item.nama}</div>
         <div class="nota-item-detail">
-          <span>${item.qty} × ${rupiah(item.harga)}</span>
+          <span>${item.qty} x ${rupiah(item.harga)}</span>
           <span>${rupiah(sub)}</span>
         </div>
       </div>`;
@@ -791,16 +800,15 @@ function tampilkanNota(items, total, diterima, kembali) {
 
   el("notaContent").innerHTML = `
     <div class="nota-header">
-      <div class="nota-toko">🏪 CV.ASA MANDIRI</div>
-      <div class="nota-sub">Grosir Lengkap • Harga Bersahabat</div>
-	  <div class="nota-sub">Jl.raya jampang Kp.binong</div>
+      <div class="nota-toko">CV.ASA MANDIRI</div>
+      <div class="nota-sub">Grosir Lengkap - Harga Bersahabat</div>
+      <div class="nota-sub">Jl.Raya Jampang Kp.Binong</div>
+      <div class="nota-sub">Tlp: 0899-6875-232</div>
     </div>
     <div class="nota-info">
-      No: ${noTrx}<br>
-      ${waktu}<br>
-      Kasir: ${kasirNama}
-	  <div class="nota-sub">Tlpn: 0899-6875-232</div>
-	  
+      No : ${noTrx}<br>
+      Tgl: ${waktu}<br>
+      Oleh: ${kasirNama}
     </div>
     <div class="nota-items">${itemsHTML}</div>
     <div class="nota-totals">
@@ -818,11 +826,10 @@ function tampilkanNota(items, total, diterima, kembali) {
       </div>
     </div>
     <div class="nota-footer">
-      <div class="nota-thanks">Terima Kasih! 😊</div>
-	  <div class="nota-sub">BCA 8801047246 </div>
-	  <div class="nota-sub">ALI MUDHOFIR </div>
-      Simpan struk ini sebagai bukti pembelian.<br>
-      Barang yang sudah dibeli tidak dapat dikembalikan.
+      <div class="nota-thanks">TERIMA KASIH</div>
+      <div class="nota-sub">BCA 8801047246 a/n ALI MUDHOFIR</div>
+      Simpan struk sebagai bukti pembelian.<br>
+      Barang yg sudah dibeli tdk dpt dikembalikan.
     </div>
   `;
 
