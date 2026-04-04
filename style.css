@@ -1203,7 +1203,9 @@ button {
 .log-kas-keluar { color: var(--danger-light); }
 
 /* ===========================
-   NOTA
+   NOTA / STRUK
+   Printer: RPP02N / EP58M / MP58II
+   Kertas: 58mm thermal
    =========================== */
 .nota-modal {
   position: fixed;
@@ -1237,35 +1239,31 @@ button {
   overflow-y: auto;
 }
 
-/* =========================================
-   NOTA PRINT - Optimized for RPP02N / EP58M / MP58II
-   Paper width: 58mm thermal roll
-   Printable area: ~48mm = ~180px at 96dpi
-   ========================================= */
+/* ── Struk: tampilan di layar (preview) ─────── */
 .nota-print {
   background: #ffffff;
   color: #000000;
-  /* 58mm kertas thermal = ~220px lebar display, cetak pas di 48mm area */
-  width: 220px;
-  padding: 10px 8px;
-  border-radius: 6px;
+  width: 260px;
+  padding: 14px 12px;
+  border-radius: 8px;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: 11.5px;
+  line-height: 1.55;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  word-break: break-word;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ── Header toko ─────────────────────────────── */
 .nota-header {
   text-align: center;
-  border-bottom: 1px dashed #000;
+  border-bottom: 2px dashed #000;
   padding-bottom: 8px;
   margin-bottom: 8px;
 }
 
 .nota-toko {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 900;
   font-family: 'Courier New', Courier, monospace;
   color: #000000;
   letter-spacing: 0.5px;
@@ -1273,15 +1271,18 @@ button {
 }
 
 .nota-sub {
-  font-size: 10px;
+  font-size: 10.5px;
   color: #000000;
+  font-weight: 600;
   margin-top: 2px;
   font-family: 'Courier New', Courier, monospace;
 }
 
+/* ── Info transaksi ──────────────────────────── */
 .nota-info {
-  font-size: 10px;
+  font-size: 10.5px;
   color: #000000;
+  font-weight: 600;
   margin-bottom: 8px;
   line-height: 1.6;
   font-family: 'Courier New', Courier, monospace;
@@ -1289,6 +1290,7 @@ button {
   padding-bottom: 6px;
 }
 
+/* ── Daftar item ─────────────────────────────── */
 .nota-items {
   border-top: 1px dashed #000;
   border-bottom: 1px dashed #000;
@@ -1297,15 +1299,15 @@ button {
 }
 
 .nota-item {
-  font-size: 10px;
+  font-size: 11px;
   margin-bottom: 5px;
   color: #000000;
   font-family: 'Courier New', Courier, monospace;
 }
 
 .nota-item-name {
-  font-weight: 700;
-  font-size: 10px;
+  font-weight: 800;
+  font-size: 11.5px;
   color: #000000;
   word-break: break-word;
 }
@@ -1314,11 +1316,13 @@ button {
   display: flex;
   justify-content: space-between;
   color: #000000;
-  font-size: 10px;
+  font-weight: 600;
+  font-size: 11px;
 }
 
+/* ── Total ───────────────────────────────────── */
 .nota-totals {
-  font-size: 10px;
+  font-size: 11px;
   font-family: 'Courier New', Courier, monospace;
 }
 
@@ -1327,24 +1331,28 @@ button {
   justify-content: space-between;
   margin-bottom: 3px;
   color: #000000;
-  font-size: 10px;
+  font-weight: 700;
+  font-size: 11px;
 }
 
 .nota-total-row.grand {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 900;
   color: #000000;
-  border-top: 1px solid #000;
-  padding-top: 4px;
-  margin-top: 4px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  padding: 4px 0;
+  margin: 4px 0;
 }
 
+/* ── Footer ──────────────────────────────────── */
 .nota-footer {
   text-align: center;
   margin-top: 8px;
-  font-size: 10px;
+  font-size: 10.5px;
   color: #000000;
-  border-top: 1px dashed #000;
+  font-weight: 600;
+  border-top: 2px dashed #000;
   padding-top: 8px;
   font-family: 'Courier New', Courier, monospace;
   line-height: 1.6;
@@ -1352,15 +1360,18 @@ button {
 
 .nota-thanks {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 900;
   color: #000000;
   margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+/* ── Tombol aksi nota ────────────────────────── */
 .nota-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -1369,7 +1380,7 @@ button {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 11px 18px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
@@ -1378,13 +1389,19 @@ button {
   align-items: center;
   gap: 7px;
   font-family: inherit;
+  transition: var(--transition);
+}
+
+.btn-download:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,184,148,0.4);
 }
 
 .btn-print {
   background: linear-gradient(135deg, #2d3436, #636e72);
   color: white;
   border: none;
-  padding: 12px 20px;
+  padding: 11px 18px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 700;
@@ -1401,67 +1418,85 @@ button {
   box-shadow: 0 6px 16px rgba(0,0,0,0.4);
 }
 
-/* =========================================
-   PRINT MEDIA QUERY - RPP02N / EP58M / MP58II
-   58mm paper = 48mm printable
-   ========================================= */
+/* ============================================
+   PRINT MEDIA — RPP02N / EP58M / MP58II
+   Kertas: 58mm, area cetak: 48mm
+   ============================================ */
 @media print {
-  /* Sembunyikan semua kecuali struk */
-  body * { visibility: hidden !important; }
+  /* Sembunyikan semua elemen halaman */
+  body > * { display: none !important; }
 
-  /* Tampilkan hanya konten struk */
-  #notaContent,
-  #notaContent * {
-    visibility: visible !important;
-  }
+  /* Tampilkan hanya nota */
+  #notaModal { display: block !important; }
+  #notaModal .nota-backdrop { display: none !important; }
+  #notaModal .nota-container { display: block !important; }
+  #notaModal .nota-actions { display: none !important; }
 
   #notaContent {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
+    display: block !important;
+    position: static !important;
+    width: 48mm !important;
+    max-width: 48mm !important;
     margin: 0 !important;
-    padding: 4px !important;
+    padding: 2mm 1mm !important;
     box-shadow: none !important;
     border-radius: 0 !important;
-    /* Ukuran pas untuk 58mm thermal printer */
-    width: 48mm !important;
-    font-size: 8pt !important;
-    font-family: 'Courier New', Courier, monospace !important;
-    color: #000 !important;
     background: #fff !important;
-  }
-
-  /* Semua teks struk jadi hitam pekat */
-  #notaContent .nota-toko,
-  #notaContent .nota-sub,
-  #notaContent .nota-info,
-  #notaContent .nota-item,
-  #notaContent .nota-item-name,
-  #notaContent .nota-item-detail,
-  #notaContent .nota-total-row,
-  #notaContent .nota-footer,
-  #notaContent .nota-thanks {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 8pt !important;
+    line-height: 1.4 !important;
     color: #000 !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* Header toko lebih besar */
-  #notaContent .nota-toko { font-size: 10pt !important; font-weight: 700 !important; }
-  #notaContent .nota-thanks { font-size: 9pt !important; font-weight: 700 !important; }
-  #notaContent .nota-total-row.grand { font-size: 9pt !important; font-weight: 700 !important; }
+  /* Semua teks hitam maksimal */
+  #notaContent * {
+    color: #000000 !important;
+    background: transparent !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
-  /* Garis pembatas */
-  #notaContent .nota-header { border-bottom: 1px dashed #000 !important; }
-  #notaContent .nota-info { border-bottom: 1px dashed #000 !important; }
-  #notaContent .nota-items { border-top: 1px dashed #000 !important; border-bottom: 1px dashed #000 !important; }
-  #notaContent .nota-footer { border-top: 1px dashed #000 !important; }
-  #notaContent .nota-total-row.grand { border-top: 1px solid #000 !important; }
+  /* Nama toko besar dan tebal */
+  #notaContent .nota-toko {
+    font-size: 10pt !important;
+    font-weight: 900 !important;
+  }
 
-  /* Setting halaman untuk thermal 58mm */
+  /* Total grand lebih besar */
+  #notaContent .nota-total-row.grand {
+    font-size: 9pt !important;
+    font-weight: 900 !important;
+    border-top: 2px solid #000 !important;
+    border-bottom: 2px solid #000 !important;
+  }
+
+  /* Terima kasih */
+  #notaContent .nota-thanks {
+    font-size: 9pt !important;
+    font-weight: 900 !important;
+  }
+
+  /* Garis dashed tetap hitam */
+  #notaContent .nota-header {
+    border-bottom: 1px dashed #000 !important;
+  }
+  #notaContent .nota-info {
+    border-bottom: 1px dashed #000 !important;
+  }
+  #notaContent .nota-items {
+    border-top: 1px dashed #000 !important;
+    border-bottom: 1px dashed #000 !important;
+  }
+  #notaContent .nota-footer {
+    border-top: 1px dashed #000 !important;
+  }
+
+  /* Setting halaman thermal 58mm */
   @page {
     size: 58mm auto;
-    margin: 2mm 1mm;
+    margin: 1mm 1mm;
   }
 }
 
@@ -1806,19 +1841,19 @@ button {
 
   /* --- Nota modal --- */
   .nota-print {
-    width: 220px;
-    padding: 10px 8px;
+    width: calc(100vw - 40px);
+    max-width: 320px;
+    padding: 20px 16px;
   }
 
   .nota-actions {
     flex-direction: column;
     width: 100%;
     gap: 8px;
-    align-items: center;
   }
 
   .nota-actions button {
-    width: 200px;
+    width: 100%;
     justify-content: center;
   }
 

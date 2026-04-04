@@ -9,7 +9,6 @@
 <!-- Open Graph (WA / Facebook) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://web189.github.io/ASA-MANDIRI/">
-
 <meta property="og:title" content="ASA MANDIRI - Grosir Modern & Terpercaya">
 <meta property="og:description" content="Belanja lebih mudah di ASA MANDIRI. Grosir lengkap dengan harga terbaik, sistem terorganisir, dan pelayanan cepat untuk kebutuhan usaha Anda.">
 <meta property="og:image" content="https://web189.github.io/ASA-MANDIRI/preview.jpg">
@@ -22,11 +21,9 @@
 <meta property="twitter:description" content="Solusi belanja grosir praktis dengan sistem modern, stok terpantau, dan harga kompetitif hanya di ASA MANDIRI.">
 <meta property="twitter:image" content="https://web189.github.io/ASA-MANDIRI/preview.jpg">
 
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SISTEM MANAJEMEN TOKO</title>
-<meta name="description" content="ASA MANDIRI - Sistem Manajemen Warung Grosir Modern">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -44,7 +41,6 @@
       <div class="login-logo-icon">🏪</div>
       <h2>CV.ASA MANDIRI</h2>
       <p>Sistem Manajemen Toko Berbasis Website Database Realtime</p>
-	  
     </div>
     <div class="login-form">
       <div class="input-group">
@@ -65,12 +61,11 @@
     </div>
     <div class="login-hint">
       <small>Admin: admin@asa.com | Kasir: kasir@asa.com</small>
-
-<small>
-  <a href="https://www.instagram.com/benyoriki/" target="_blank" class="dev-link">
-    <i class="fa-brands fa-instagram"></i> Developer: @benyoriki
-  </a>
-</small>
+      <small>
+        <a href="https://www.instagram.com/benyoriki/" target="_blank" class="dev-link">
+          <i class="fa-brands fa-instagram"></i> Developer: @benyoriki
+        </a>
+      </small>
     </div>
   </div>
 </div>
@@ -85,7 +80,6 @@
       <div class="brand-text">
         <span class="brand-name">ASA MANDIRI</span>
         <span class="brand-sub">Grosir Modern Website Sistem</span>
-
       </div>
     </div>
 
@@ -98,7 +92,6 @@
     </div>
 
     <nav class="sidebar-nav">
-      <!-- TAMU & SEMUA -->
       <a class="nav-item active" href="#" onclick="showSection('dashboard')">
         <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
       </a>
@@ -115,9 +108,9 @@
         <a class="nav-item" href="#" onclick="showSection('histori')">
           <i class="fa-solid fa-clock-rotate-left"></i><span>Histori</span>
         </a>
-		<button class="btn-danger-sm" onclick="resetDatabase()">
-  <i class="fa-solid fa-trash"></i> Reset Database
-</button>
+        <button class="btn-danger-sm" onclick="resetDatabase()">
+          <i class="fa-solid fa-trash"></i> Reset Database
+        </button>
       </div>
 
       <!-- KASIR ONLY -->
@@ -471,24 +464,41 @@
 <!-- TOAST -->
 <div id="toast" class="toast hidden"></div>
 
-<!-- FIREBASE -->
+<!-- ============================================
+     FIREBASE SDK v8
+     ============================================ -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDQfd3U6ItGm29OM5cPgYfxxFG3JTEG8IY",
-  authDomain: "asa-mandiri.firebaseapp.com",
-  databaseURL: "https://asa-mandiri-default-rtdb.firebaseio.com",
-  projectId: "asa-mandiri",
-  storageBucket: "asa-mandiri.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef1234567890"
-};
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+<!-- ============================================
+     FIREBASE CONFIG & INIT
+     PENTING: Ganti nilai di bawah sesuai
+     Firebase Console project Anda jika error.
+     Project: asa-mandiri
+     Console: https://console.firebase.google.com
+     ============================================ -->
+<script>
+  const firebaseConfig = {
+    apiKey:            "AIzaSyDQfd3U6ItGm29OM5cPgYfxxFG3JTEG8IY",
+    authDomain:        "asa-mandiri.firebaseapp.com",
+    databaseURL:       "https://asa-mandiri-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId:         "asa-mandiri",
+    storageBucket:     "asa-mandiri.appspot.com",
+    messagingSenderId: "860403058290",
+    appId:             "1:860403058290:web:d3f9a1b2c4e5f6a7"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  // db tersedia global untuk app.js
+  const db = firebase.database();
 </script>
+
+<!-- APP LOGIC -->
 <script src="app.js"></script>
+
 </body>
 </html>
